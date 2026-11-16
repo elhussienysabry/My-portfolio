@@ -1,128 +1,158 @@
-# Elhussieny Sabry — Personal Portfolio & Data Engineering Showcase
+# Elhussieny Sabry — Data Engineer Portfolio
 
-A modern, high-performance personal portfolio website built with **React**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**. Designed for technical storytelling, showcasing production-grade data pipelines, database internals research, open-source contributions, and verified certifications.
+A light editorial portfolio for a data engineer: warm paper tones, electric accents, a live
+pipeline preview, in-depth project case studies, verified credentials, open-source work, and a
+small interactive data-pipeline game.
 
----
-
-## Technical Stack
-
-- **Framework:** React 19 + TypeScript
-- **Bundler:** Vite 6
-- **Styling:** Tailwind CSS v4 + custom CSS variables
-- **Motion & Interactions:** Framer Motion (respects `prefers-reduced-motion`)
-- **Iconography:** Lucide Icons (clean SVGs, zero emojis)
-- **Visuals:** Custom HTML5 Canvas real-time pipeline telemetry visualization
+Built with **React 19**, **TypeScript**, **Vite 6**, **Tailwind CSS v4**, **Framer Motion**, and
+**Lucide** icons. Fonts are self-hosted; there is no backend and no tracking.
 
 ---
 
-## Project Architecture & Directory Layout
+## Highlights
+
+- **Bento project gallery** with category filters and accessible detail dialogs.
+- **Case studies** covering schema drift, idempotent loads, data quality gates, and observability.
+- **Certifications** with real certificate previews and a keyboard-friendly lightbox.
+- **Open-source section** featuring verified Apache Airflow and pandas pull requests.
+- **Learning journey** timeline from Python fundamentals to database internals.
+- **Take a Break — Data Pipeline Challenge**: order Source → Ingestion → Processing → Storage →
+  Analytics. Drag and drop on desktop, tap-to-place and arrow controls on touch devices. Includes a
+  timer, attempt count, score, local best score, confetti, success state, and replay.
+- **Motion with care**: Framer Motion transitions respect `prefers-reduced-motion`; the layout is
+  responsive from 360 px upward.
+- **CV download and view** links served from `public/CV.pdf`.
+- **SEO and sharing**: Open Graph/Twitter metadata, a generated 1200×630 OG image, favicon, and
+  robots configuration.
+
+---
+
+## Design System
+
+| Token | Value | Use |
+| --- | --- | --- |
+| Paper | `#f7f4ec` | Page canvas |
+| Cream | `#fffdf8` | Cards and panels |
+| Ink | `#15161f` | Primary text |
+| Electric blue | `#2f55ff` | Links, focus, primary accent |
+| Cyan | `#00a6c4` | Data/ingestion accents |
+| Violet | `#7357ff` | Processing accents |
+| Green | `#0a7d5c` | Success and health states |
+| Coral | `#f25555` | Errors and warnings |
+| Orange | `#ff7a2f` | Analytics and energy |
+| Yellow | `#e3ac1f` | Highlights and stickers |
+
+Typography pairs **Bricolage Grotesque** for display, **DM Sans** for body copy, **Instrument
+Serif** for editorial italics, and **JetBrains Mono** for labels and data. All font files are
+served locally from `public/fonts/`.
+
+---
+
+## Project Structure
 
 ```
 portfolio/
 ├── public/
-│   ├── Elhussieny_Sabry_CV.pdf       # Verified professional CV (A4 printable)
+│   ├── CV.pdf                         # Latest CV (one page, A4)
+│   ├── og-image.png                   # 1200×630 social preview
+│   ├── avatar.jpg
 │   ├── certificates/
-│   │   └── nasa_space_apps_2026.png  # Authentic NASA Space Apps certificate
-│   ├── favicon.svg                   # Vector SVG brand icon
-│   ├── robots.txt                    # Search engine crawler configuration
-│   └── sitemap.xml                   # XML Sitemap for SEO
+│   │   └── nasa_space_apps_2026.webp
+│   ├── fonts/                         # Self-hosted WOFF2 fonts
+│   ├── favicon.svg
+│   └── robots.txt
 ├── src/
 │   ├── components/
-│   │   ├── layout/
-│   │   │   └── Layout.tsx            # Sticky Navbar, Scroll Progress, Footer, ScrollToTop
-│   │   ├── sections/
-│   │   │   ├── HeroSection.tsx       # Hero + Interactive Data Pipeline Canvas Viz
-│   │   │   ├── AboutSection.tsx      # Authentic professional narrative + BIS Menoufia
-│   │   │   ├── SkillsSection.tsx     # Categorized technical competencies
-│   │   │   ├── ProjectsSection.tsx   # Bento-style cards + detailed modal dialogs
-│   │   │   ├── CaseStudiesSection.tsx# Systems engineering depth deep-dives
-│   │   │   ├── CertificationsSection.tsx # Verified credentials + certificate lightbox
-│   │   │   ├── OpenSourceSection.tsx # Apache Airflow contribution timeline
-│   │   │   ├── JourneySection.tsx    # Technical growth & learning roadmap
-│   │   │   └── ContactSection.tsx    # Direct contact points & CV download
-│   │   └── ui/
-│   │       └── Components.tsx        # Section, FadeInView, GlowCard, Badge, Divider
-│   ├── data/
-│   │   └── portfolio.ts              # Single source of truth for all portfolio data
-│   ├── hooks/
-│   │   └── usePortfolio.ts           # IntersectionObserver, scroll progress, reduced motion
-│   ├── styles/
-│   │   └── globals.css               # Design tokens, dark theme, and grid utilities
-│   ├── App.tsx                       # Master application component
-│   └── main.tsx                      # Vite React root mounting
-├── index.html                        # Semantic HTML with complete OpenGraph & Twitter SEO tags
-├── vite.config.ts                    # Vite configuration with Tailwind plugin
-├── tsconfig.json                     # Strict TypeScript compiler options
+│   │   ├── layout/Layout.tsx          # Navbar, mobile menu, footer, scroll-to-top
+│   │   ├── sections/                  # Hero, About, Skills, Projects, Case Studies,
+│   │   │                              # Certifications, Open Source, Journey, Game, Contact
+│   │   └── ui/Components.tsx          # Section, FadeInView, Card, Badge, dividers
+│   ├── data/portfolio.ts              # Single source of truth for content
+│   ├── hooks/usePortfolio.ts          # Active section, scroll progress, motion helpers
+│   ├── styles/globals.css             # Tokens, font faces, utilities, reduced-motion rules
+│   ├── App.tsx
+│   └── main.tsx
+├── index.html
+├── vite.config.ts
+├── vercel.json                        # Vercel build/output, headers, caching
 └── package.json
 ```
 
 ---
 
-## Getting Started
+## Local Development
 
-### Prerequisites
-
-- **Node.js** >= 18.0.0
-- **npm** >= 9.0.0
-
-### Local Development
+Requires Node.js 20+ and npm 10+.
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Start local development server
-npm run dev
-
-# 3. Open in browser
-# http://localhost:5173
+npm run dev        # http://localhost:5173
+npm run typecheck
+npm run build      # type-check + production build to dist/
+npm run preview    # http://localhost:4173
 ```
 
-### Production Build
+Content lives in [`src/data/portfolio.ts`](src/data/portfolio.ts); section components are mostly
+presentational. Update the CV by replacing `public/CV.pdf` with the latest PDF (keep the filename).
+
+---
+
+## The Pipeline Game
+
+The game is implemented in `src/components/sections/GameSection.tsx` with no backend:
+
+- Two input methods: native HTML drag and drop, or select a component and select a slot.
+- Placed components can be reordered with accessible arrow buttons or returned to the tray.
+- Validation checks every slot, highlights correct/incorrect stages, and counts attempts.
+- Score starts at 100, minus 15 per failed attempt and 2 per five seconds elapsed (minimum 10).
+- The best score/time is stored in `localStorage` under `es-pipeline-best-v1`.
+- Success triggers a confetti animation, a status announcement, and a replay action.
+- Confetti is skipped when `prefers-reduced-motion` is set.
+
+---
+
+## Deployment
+
+`vercel.json` configures the Vite build, output directory, long-lived asset caching, security
+headers, and inline PDF delivery for the CV.
+
+### Vercel
+
+1. Import the GitHub repository at [vercel.com/new](https://vercel.com/new).
+2. Vercel detects Vite; the config supplies `npm run build` and `dist`.
+3. Deploy. No environment variables are required.
+
+To test a deployment without logging in:
 
 ```bash
-# Run TypeScript type check and compile production bundle
-npm run build
-
-# Preview production build locally
-npm run preview
+npx vercel deploy --temporary --yes --verify
 ```
 
-The production assets will be built to the `dist/` directory.
+The resulting URL is temporary until claimed in Vercel. A logged-in `vercel deploy --prod` creates
+a persistent production deployment.
+
+`netlify.toml` is intentionally omitted; Netlify can use `npm run build` and `dist` directly.
 
 ---
 
-## Deployment Instructions
+## Quality Checks
 
-### Deploy to Vercel (Recommended)
-
-1. Push your repository to GitHub.
-2. Sign in to [Vercel](https://vercel.com) and click **"Add New Project"**.
-3. Import your `portfolio` repository.
-4. Vercel automatically detects Vite:
-   - **Framework Preset:** Vite
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `dist`
-5. Click **"Deploy"**.
-
-### Deploy to Netlify
-
-1. Link your GitHub repository in Netlify.
-2. Set Build command to: `npm run build`
-3. Set Publish directory to: `dist`
-4. Deploy site.
+- `npm run typecheck` — strict TypeScript, no errors.
+- `npm run build` — production bundle generated to `dist/`.
+- Lighthouse (mobile, local production preview): Performance 85, Accessibility 100,
+  Best Practices 100, SEO 100.
+- Manual QA covers desktop/tablet/mobile layouts, all navigation links, CV download/view,
+  game completion/error/replay, reduced motion, and console/network errors.
 
 ---
 
-## Updating Portfolio Content
+## Contact
 
-All personal information, projects, case studies, certifications, and skills are maintained in:
-`src/data/portfolio.ts`
-
-To add a new project or certification, simply edit that file — the UI components will reactively update.
+- GitHub: [elhussienysabry](https://github.com/elhussienysabry)
+- LinkedIn: [in/elhussienysabry](https://www.linkedin.com/in/elhussienysabry/)
+- Email: elhussienysabry@gmail.com
+- Location: Menoufia, Egypt
 
 ---
-
-## License
 
 MIT © Elhussieny Sabry
