@@ -8,12 +8,13 @@ import { CaseStudiesSection } from '@/components/sections/CaseStudiesSection';
 import { CertificationsSection } from '@/components/sections/CertificationsSection';
 import { OpenSourceSection } from '@/components/sections/OpenSourceSection';
 import { JourneySection } from '@/components/sections/JourneySection';
+import { GameSection } from '@/components/sections/GameSection';
 import { ContactSection } from '@/components/sections/ContactSection';
 import { SectionDivider } from '@/components/ui/Components';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-navy-950 text-text-primary selection:bg-accent-blue/20 selection:text-white">
+    <div className="min-h-screen bg-paper text-ink selection:bg-accent-blue/20 selection:text-ink">
       <Navbar />
 
       <main>
@@ -32,6 +33,8 @@ export default function App() {
         <OpenSourceSection />
         <SectionDivider />
         <JourneySection />
+        <SectionDivider />
+        <GameSection />
         <SectionDivider />
         <ContactSection />
       </main>

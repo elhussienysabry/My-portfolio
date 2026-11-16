@@ -1,39 +1,43 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 interface SectionProps {
   id: string;
   children: React.ReactNode;
   className?: string;
   label?: string;
-  title?: string;
-  subtitle?: string;
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+  align?: 'left' | 'center';
 }
 
-export function Section({ id, children, className = '', label, title, subtitle }: SectionProps) {
+export function Section({ id, children, className = '', label, title, subtitle, align = 'left' }: SectionProps) {
+  const reduced = useReducedMotion();
+
   return (
-    <section id={id} className={`relative py-20 md:py-28 ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id={id} className={`relative scroll-mt-20 py-20 sm:py-24 lg:py-28 ${className}`}>
+      <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
         {(label || title) && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="mb-14 md:mb-18"
+            initial={reduced ? false : { opacity: 0, y: 28 }}
+            whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-90px' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className={`mb-10 sm:mb-14 md:mb-16 ${align === 'center' ? 'text-center' : ''}`}
           >
             {label && (
-              <span className="inline-block text-accent-blue text-sm font-mono font-medium tracking-wider uppercase mb-3">
+              <span className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-line bg-cream/80 px-3.5 py-1.5 text-[11px] font-mono font-medium uppercase tracking-[0.16em] text-ink-soft shadow-soft">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent-blue" />
                 {label}
               </span>
             )}
             {title && (
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary mb-4">
+              <h2 className="max-w-4xl text-[2.35rem] font-extrabold leading-[0.98] tracking-[-0.045em] text-ink sm:text-5xl lg:text-[3.9rem]">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="text-text-secondary text-lg md:text-xl max-w-2xl">
+              <p className={`mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg ${align === 'center' ? 'mx-auto' : ''}`}>
                 {subtitle}
               </p>
             )}
@@ -56,19 +60,20 @@ export function FadeInView({
   className?: string;
   direction?: 'up' | 'down' | 'left' | 'right';
 }) {
+  const reduced = useReducedMotion();
   const dirMap = {
-    up: { y: 30 },
-    down: { y: -30 },
-    left: { x: 30 },
-    right: { x: -30 },
+    up: { y: 26 },
+    down: { y: -26 },
+    left: { x: 26 },
+    right: { x: -26 },
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, ...dirMap[direction] }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      initial={reduced ? false : { opacity: 0, ...dirMap[direction] }}
+      whileInView={reduced ? undefined : { opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
       {children}
@@ -80,21 +85,16 @@ export function Card({
   children,
   className = '',
   hover = true,
-  glow = false,
 }: {
   children: React.ReactNode;
   className?: string;
   hover?: boolean;
-  glow?: boolean;
 }) {
   return (
     <div
-      className={`
-        bg-surface/80 border border-border rounded-2xl p-6
-        ${hover ? 'hover:border-border-bright hover:bg-surface-hover transition-all duration-300' : ''}
-        ${glow ? 'glow-blue' : ''}
-        ${className}
-      `}
+      className={`rounded-[1.75rem] border border-line bg-cream shadow-soft ${
+        hover ? 'transition duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-lift' : ''
+      } ${className}`}
     >
       {children}
     </div>
@@ -104,7 +104,7 @@ export function Card({
 export function GlowCard({
   children,
   className = '',
-  color = '#38bdf8',
+  color = '#2f55ff',
 }: {
   children: React.ReactNode;
   className?: string;
@@ -126,36 +126,41 @@ export function GlowCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative bg-surface/80 border border-border rounded-2xl overflow-hidden transition-all duration-300 hover:border-border-bright ${className}`}
+      className={`relative overflow-hidden rounded-[1.75rem] border border-line bg-cream shadow-soft transition duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-lift ${className}`}
     >
       {isHovered && (
         <div
-          className="absolute pointer-events-none transition-opacity duration-300"
+          aria-hidden="true"
+          className="pointer-events-none absolute transition-opacity duration-300"
           style={{
             left: mousePos.x - 150,
             top: mousePos.y - 150,
             width: 300,
             height: 300,
-            background: `radial-gradient(circle, ${color}15 0%, transparent 70%)`,
-            opacity: isHovered ? 1 : 0,
+            background: `radial-gradient(circle, ${color}18 0%, transparent 68%)`,
           }}
         />
       )}
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 flex h-full flex-col">{children}</div>
     </div>
   );
 }
 
-export function Badge({ children, color }: { children: React.ReactNode; color?: string }) {
+export function Badge({
+  children,
+  color = '#2f55ff',
+  className = '',
+}: {
+  children: React.ReactNode;
+  color?: string;
+  className?: string;
+}) {
   return (
     <span
-      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-mono font-medium border"
-      style={{
-        backgroundColor: color ? `${color}10` : 'rgba(56,189,248,0.1)',
-        borderColor: color ? `${color}30` : 'rgba(56,189,248,0.2)',
-        color: color || '#38bdf8',
-      }}
+      className={`inline-flex items-center gap-1.5 rounded-full border bg-cream/80 px-2.5 py-1 text-[11px] font-medium text-ink-soft ${className}`}
+      style={{ borderColor: `${color}38` }}
     >
+      <span className="h-1 w-1 shrink-0 rounded-full" style={{ backgroundColor: color }} />
       {children}
     </span>
   );
@@ -163,8 +168,35 @@ export function Badge({ children, color }: { children: React.ReactNode; color?: 
 
 export function SectionDivider() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+    <div aria-hidden="true" className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
+      <div className="flex items-center gap-2.5 py-1">
+        <span className="h-px flex-1 bg-gradient-to-r from-transparent via-line-strong to-line-strong/40" />
+        <span className="h-1.5 w-1.5 rounded-full bg-accent-blue" />
+        <span className="h-1.5 w-1.5 rounded-full bg-accent-purple" />
+        <span className="h-1.5 w-1.5 rounded-full bg-accent-coral" />
+        <span className="h-1.5 w-1.5 rounded-full bg-accent-orange" />
+        <span className="h-1.5 w-1.5 rounded-full bg-accent-green" />
+        <span className="h-px flex-1 bg-gradient-to-l from-transparent via-line-strong to-line-strong/40" />
+      </div>
     </div>
+  );
+}
+
+export function Sticker({
+  children,
+  color = '#e3ac1f',
+  className = '',
+}: {
+  children: React.ReactNode;
+  color?: string;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-lg border-2 border-ink/85 px-3 py-1.5 text-xs font-bold text-ink shadow-[3px_3px_0_rgba(21,22,31,0.85)] ${className}`}
+      style={{ backgroundColor: color }}
+    >
+      {children}
+    </span>
   );
 }

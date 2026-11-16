@@ -1,109 +1,152 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Section, FadeInView, Card } from '@/components/ui/Components';
+import { Section, FadeInView } from '@/components/ui/Components';
 import { siteConfig } from '@/data/portfolio';
-import { MapPin, GraduationCap, Code, BookOpen, GitFork } from 'lucide-react';
+import {
+  MapPin, GraduationCap, Code2, BookOpen, GitFork, ArrowUpRight,
+  Database, Sparkles,
+} from 'lucide-react';
+
+const stats = [
+  { value: '03', label: 'Year of study', note: 'BIS · Menoufia University', color: '#2f55ff', tint: 'bg-accent-blue/[0.07]' },
+  { value: '05', label: 'End-to-end projects', note: 'from source to insight', color: '#e8478c', tint: 'bg-accent-pink/[0.07]' },
+  { value: '02', label: 'Open-source PRs', note: 'Airflow & pandas', color: '#0b9e73', tint: 'bg-accent-green/[0.08]' },
+  { value: '11', label: 'Pipeline steps', note: 'in RetailFlow ELT', color: '#7357ff', tint: 'bg-accent-purple/[0.07]' },
+];
 
 export function AboutSection() {
   return (
     <Section
       id="about"
-      label="About Me"
-      title="Building Data Systems"
-      subtitle="From the ground up — with an emphasis on understanding the internals."
+      label="01 — About"
+      title={
+        <>
+          A builder&rsquo;s mind, <span className="font-serif italic font-normal text-gradient">not a tool list.</span>
+        </>
+      }
+      subtitle="I care about how data systems behave when things go wrong — because that is where good engineering shows up."
     >
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        {/* Main story */}
-        <FadeInView className="lg:col-span-3">
-          <div className="space-y-5 text-text-secondary leading-relaxed">
-            <p className="text-lg">
-              I'm a Data Engineer focused on building reliable data pipelines and understanding how the
-              systems behind them actually work. My journey into data engineering started from studying
-              Business Information Systems, which gave me a perspective that bridges business thinking
-              with technical implementation.
-            </p>
-            <p>
-              What drives me is going beyond surface-level tooling. I don't just use databases — I study
-              how B-Tree indexes work, how storage engines handle writes, and how concurrency control
-              prevents data corruption. I don't just run Spark jobs — I dig into how the DAG scheduler
-              splits work across stages and how shuffle operations move data between partitions.
-            </p>
-            <p>
-              I build end-to-end data pipelines with schema validation, idempotent loading, and data quality
-              gates — not because a tutorial told me to, but because I've seen how pipelines break in subtle
-              ways when these safeguards are missing.
-            </p>
-            <p>
-              I contribute to open-source projects like Apache Airflow because I believe in building in
-              public and learning from the codebase of production-grade systems. Every PR, every code
-              review, and every issue discussion is a learning opportunity.
-            </p>
+      <div className="grid gap-4 lg:grid-cols-12">
+        <FadeInView className="lg:col-span-7">
+          <div className="relative h-full overflow-hidden rounded-[2rem] border border-line bg-cream p-7 shadow-soft sm:p-9">
+            <div aria-hidden="true" className="absolute -right-20 -top-20 h-52 w-52 rounded-full bg-accent-blue/[0.06]" />
+            <div className="relative space-y-5 text-[15px] leading-relaxed text-ink-soft sm:text-base">
+              <p className="text-lg leading-relaxed text-ink sm:text-xl">
+                I&rsquo;m a data engineer focused on building reliable pipelines and understanding the
+                systems behind them — <span className="marker-yellow font-medium text-ink">from storage engines to schedulers.</span>
+              </p>
+              <p>
+                My path started in Business Information Systems, which gave me a useful bridge between
+                business thinking and technical implementation. What keeps me here is the depth: I don&rsquo;t
+                just use a database, I study how B-Tree indexes, write-ahead logs and concurrency control
+                make it dependable.
+              </p>
+              <p>
+                I build end-to-end projects with schema validation, idempotent loading and data quality
+                gates — not because a tutorial said so, but because I have seen how quietly pipelines break
+                without them. I also contribute to the tools I use, including Apache Airflow and pandas,
+                because reading production code is the fastest way to level up.
+              </p>
+            </div>
+            <div className="relative mt-7 flex flex-wrap items-center gap-3 border-t border-line pt-5">
+              <span className="inline-flex items-center gap-2 rounded-lg bg-ink px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-cream">
+                <Sparkles size={12} className="text-accent-yellow" />
+                Learning in public
+              </span>
+              <span className="text-xs text-muted">Python · SQL · Airflow · Spark</span>
+            </div>
           </div>
         </FadeInView>
 
-        {/* Info cards */}
-        <div className="lg:col-span-2 space-y-4">
-          <FadeInView delay={0.1}>
-            <Card className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-accent-blue/10 flex items-center justify-center flex-shrink-0">
-                <MapPin size={18} className="text-accent-blue" />
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:col-span-5">
+          {stats.map((stat, i) => (
+            <FadeInView key={stat.label} delay={i * 0.06}>
+              <div className={`group relative flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-line p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift ${stat.tint}`}>
+                <div
+                  aria-hidden="true"
+                  className="absolute -right-6 -top-6 h-20 w-20 rounded-full opacity-20 blur-xl transition-opacity group-hover:opacity-40"
+                  style={{ backgroundColor: stat.color }}
+                />
+                <div className="font-display text-4xl font-extrabold leading-none tracking-[-0.05em]" style={{ color: stat.color }}>
+                  {stat.value}
+                </div>
+                <p className="mt-3 text-sm font-semibold leading-tight text-ink">{stat.label}</p>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted">{stat.note}</p>
+                <div className="mt-auto flex items-end gap-1 pt-6" aria-hidden="true">
+                  {[12, 20, 9, 26, 16, 22, 13].map((height, barIndex) => (
+                    <span
+                      key={barIndex}
+                      className="w-1.5 rounded-full"
+                      style={{
+                        height: `${height}px`,
+                        backgroundColor: stat.color,
+                        opacity: 0.16 + barIndex * 0.09,
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
-              <div>
-                <p className="text-text-primary font-medium text-sm mb-1">Location</p>
-                <p className="text-text-secondary text-sm">{siteConfig.location}</p>
-              </div>
-            </Card>
-          </FadeInView>
-
-          <FadeInView delay={0.2}>
-            <Card className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center flex-shrink-0">
-                <GraduationCap size={18} className="text-accent-purple" />
-              </div>
-              <div>
-                <p className="text-text-primary font-medium text-sm mb-1">Education</p>
-                <p className="text-text-secondary text-sm">{siteConfig.education.degree}</p>
-                <p className="text-text-muted text-xs mt-1">{siteConfig.education.institution}</p>
-              </div>
-            </Card>
-          </FadeInView>
-
-          <FadeInView delay={0.3}>
-            <Card className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-accent-green/10 flex items-center justify-center flex-shrink-0">
-                <Code size={18} className="text-accent-green" />
-              </div>
-              <div>
-                <p className="text-text-primary font-medium text-sm mb-1">Core Stack</p>
-                <p className="text-text-secondary text-sm">Python, SQL, Spark, dbt, Docker</p>
-              </div>
-            </Card>
-          </FadeInView>
-
-          <FadeInView delay={0.4}>
-            <Card className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-accent-orange/10 flex items-center justify-center flex-shrink-0">
-                <BookOpen size={18} className="text-accent-orange" />
-              </div>
-              <div>
-                <p className="text-text-primary font-medium text-sm mb-1">Current Focus</p>
-                <p className="text-text-secondary text-sm">Database Internals & Distributed Systems</p>
-              </div>
-            </Card>
-          </FadeInView>
-
-          <FadeInView delay={0.5}>
-            <Card className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-accent-pink/10 flex items-center justify-center flex-shrink-0">
-                <GitFork size={18} className="text-accent-pink" />
-              </div>
-              <div>
-                <p className="text-text-primary font-medium text-sm mb-1">Open Source</p>
-                <p className="text-text-secondary text-sm">Apache Airflow contributor</p>
-              </div>
-            </Card>
-          </FadeInView>
+            </FadeInView>
+          ))}
         </div>
+
+        <FadeInView delay={0.1} className="lg:col-span-7">
+          <div className="relative h-full overflow-hidden rounded-[2rem] bg-ink p-7 text-cream shadow-lift sm:p-8">
+            <div aria-hidden="true" className="absolute inset-0 bg-dots opacity-[0.08]" />
+            <div aria-hidden="true" className="absolute -right-10 -top-16 h-56 w-56 rounded-full bg-accent-purple/25 blur-[70px]" />
+            <div className="relative">
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/45">
+                <BookOpen size={13} className="text-accent-yellow" />
+                Currently exploring
+              </div>
+              <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                What makes data infrastructure <span className="text-gradient">trustworthy?</span>
+              </h3>
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60">
+                Storage engines, isolation levels, write-ahead logging, distributed consensus and the
+                unglamorous details that decide whether a pipeline survives production.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {['B-Tree & LSM trees', 'WAL & MVCC', 'Raft / Paxos', 'Schema evolution', 'Shuffle tuning', 'Data contracts'].map((topic) => (
+                  <span key={topic} className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[11px] text-white/70">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </FadeInView>
+
+        <FadeInView delay={0.16} className="lg:col-span-5">
+          <div className="h-full rounded-[2rem] border border-line bg-cream p-7 shadow-soft sm:p-8">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">Quick facts</p>
+            <div className="mt-5 space-y-4">
+              {[
+                { Icon: MapPin, label: 'Based in', value: siteConfig.location, color: '#ff7a2f' },
+                { Icon: GraduationCap, label: 'Studying', value: 'BIS · Menoufia University', color: '#7357ff' },
+                { Icon: Code2, label: 'Core stack', value: 'Python, SQL, Spark, dbt, Docker', color: '#2f55ff' },
+                { Icon: GitFork, label: 'Open source', value: 'Apache Airflow & pandas', color: '#0b9e73' },
+                { Icon: Database, label: 'Deep interest', value: 'Database internals', color: '#00a6c4' },
+              ].map(({ Icon, label, value, color }) => (
+                <div key={label} className="flex items-start gap-3">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg" style={{ backgroundColor: `${color}12`, color }}>
+                    <Icon size={15} />
+                  </span>
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-wider text-muted">{label}</p>
+                    <p className="mt-0.5 text-sm font-medium leading-snug text-ink">{value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <a
+              href="#contact"
+              className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-accent-blue transition-colors hover:text-accent-purple"
+            >
+              Let&rsquo;s work together
+              <ArrowUpRight size={13} />
+            </a>
+          </div>
+        </FadeInView>
       </div>
     </Section>
   );

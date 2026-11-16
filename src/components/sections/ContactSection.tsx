@@ -1,124 +1,154 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Section, FadeInView, GlowCard } from '@/components/ui/Components';
+import { Section, FadeInView } from '@/components/ui/Components';
 import { siteConfig } from '@/data/portfolio';
-import { Mail, MapPin, Github, Linkedin, Send, ArrowUpRight } from 'lucide-react';
+import {
+  Mail, MapPin, Github, Linkedin, ArrowUpRight, Download, FileText,
+  Sparkles, Clock3,
+} from 'lucide-react';
 
 export function ContactSection() {
   return (
     <Section
       id="contact"
-      label="Get in Touch"
-      title="Let's Connect"
-      subtitle="Always open to discussing data engineering, open-source projects, or collaboration opportunities."
+      label="09 — Contact"
+      title={
+        <>
+          Have a problem worth <span className="font-serif italic font-normal text-gradient">solving?</span>
+        </>
+      }
+      subtitle="I'm open to data engineering internships, junior roles and thoughtful open-source collaboration."
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-        {/* Contact info */}
-        <FadeInView>
-          <div className="space-y-6">
-            <p className="text-text-secondary leading-relaxed">
-              Whether you have a question about a project, want to discuss data engineering concepts,
-              or are interested in collaborating on open-source work — I'd be happy to hear from you.
-            </p>
+      <FadeInView>
+        <div className="relative overflow-hidden rounded-[2.2rem] bg-ink text-cream shadow-lift">
+          <div aria-hidden="true" className="absolute inset-0 bg-dots opacity-[0.07]" />
+          <div aria-hidden="true" className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-accent-blue/25 blur-[100px]" />
+          <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 right-0 h-80 w-80 rounded-full bg-accent-purple/20 blur-[100px]" />
+          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
 
-            <div className="space-y-4">
-              <GlowCard color="#38bdf8">
+          <div className="relative grid gap-10 p-6 sm:p-9 lg:grid-cols-12 lg:gap-8 lg:p-12">
+            <div className="lg:col-span-7">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-white/65">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-green opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-green" />
+                </span>
+                Available for opportunities
+              </span>
+
+              <h3 className="mt-6 max-w-xl font-display text-4xl font-extrabold leading-[0.96] tracking-[-0.045em] text-white sm:text-5xl">
+                Let&rsquo;s build something
+                <span className="text-gradient"> that lasts.</span>
+              </h3>
+              <p className="mt-5 max-w-lg text-sm leading-relaxed text-white/60 sm:text-base">
+                Whether it&rsquo;s a pipeline that keeps failing, a role you think I&rsquo;d be good at, or a
+                project we could build in public — my inbox is open.
+              </p>
+
+              <div className="mt-7 flex flex-wrap items-center gap-3">
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="flex items-center gap-4 p-5 group"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-cream px-5 py-3.5 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-accent-yellow hover:shadow-pop"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-accent-blue/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent-blue/20 transition-colors">
-                    <Mail size={20} className="text-accent-blue" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-text-muted text-sm mb-0.5">Email</p>
-                    <p className="text-text-primary font-medium">{siteConfig.email}</p>
-                  </div>
-                  <ArrowUpRight size={16} className="text-text-muted group-hover:text-accent-blue transition-colors" />
+                  <Mail size={16} />
+                  Send me an email
+                  <ArrowUpRight size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </a>
-              </GlowCard>
-
-              <GlowCard color="#818cf8">
                 <a
-                  href={siteConfig.social.linkedin}
+                  href={siteConfig.cvUrl}
+                  download="Elhussieny-Sabry-CV.pdf"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                >
+                  <Download size={16} />
+                  Download CV
+                </a>
+                <a
+                  href={siteConfig.cvUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-5 group"
+                  className="inline-flex items-center gap-1.5 px-1 py-3 text-xs font-medium text-white/75 transition-colors hover:text-white"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-accent-purple/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent-purple/20 transition-colors">
-                    <Linkedin size={20} className="text-accent-purple" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-text-muted text-sm mb-0.5">LinkedIn</p>
-                    <p className="text-text-primary font-medium">elhussienysabry</p>
-                  </div>
-                  <ArrowUpRight size={16} className="text-text-muted group-hover:text-accent-purple transition-colors" />
+                  <FileText size={14} />
+                  View CV
                 </a>
-              </GlowCard>
+              </div>
 
-              <GlowCard color="#34d399">
-                <a
-                  href={siteConfig.social.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-5 group"
-                >
-                  <div className="w-11 h-11 rounded-xl bg-accent-green/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent-green/20 transition-colors">
-                    <Github size={20} className="text-accent-green" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-text-muted text-sm mb-0.5">GitHub</p>
-                    <p className="text-text-primary font-medium">elhussienysabry</p>
-                  </div>
-                  <ArrowUpRight size={16} className="text-text-muted group-hover:text-accent-green transition-colors" />
-                </a>
-              </GlowCard>
+              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-white/40">
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock3 size={12} className="text-accent-cyan" />
+                  Usually replies within 24 hours
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin size={12} className="text-accent-orange" />
+                  {siteConfig.location} · open to remote
+                </span>
+              </div>
+            </div>
 
-              <GlowCard color="#fb923c">
-                <div className="flex items-center gap-4 p-5">
-                  <div className="w-11 h-11 rounded-xl bg-accent-orange/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin size={20} className="text-accent-orange" />
-                  </div>
-                  <div>
-                    <p className="text-text-muted text-sm mb-0.5">Location</p>
-                    <p className="text-text-primary font-medium">{siteConfig.location}</p>
-                  </div>
-                </div>
-              </GlowCard>
+            <div className="grid content-start gap-2.5 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="group flex items-center gap-3.5 rounded-2xl border border-white/10 bg-white/[0.05] p-4 transition-all hover:border-white/25 hover:bg-white/[0.09]"
+              >
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent-blue/20 text-accent-cyan">
+                  <Mail size={18} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-white/40">Email</span>
+                  <span className="mt-0.5 block truncate text-sm font-medium text-white">{siteConfig.email}</span>
+                </span>
+                <ArrowUpRight size={15} className="shrink-0 text-white/30 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
+              </a>
+
+              <a
+                href={siteConfig.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3.5 rounded-2xl border border-white/10 bg-white/[0.05] p-4 transition-all hover:border-white/25 hover:bg-white/[0.09]"
+              >
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent-purple/20 text-accent-violet">
+                  <Linkedin size={18} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-white/40">LinkedIn</span>
+                  <span className="mt-0.5 block truncate text-sm font-medium text-white">in/elhussienysabry</span>
+                </span>
+                <ArrowUpRight size={15} className="shrink-0 text-white/30 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
+              </a>
+
+              <a
+                href={siteConfig.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3.5 rounded-2xl border border-white/10 bg-white/[0.05] p-4 transition-all hover:border-white/25 hover:bg-white/[0.09]"
+              >
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent-green/20 text-accent-green">
+                  <Github size={18} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-white/40">GitHub</span>
+                  <span className="mt-0.5 block truncate text-sm font-medium text-white">@elhussienysabry</span>
+                </span>
+                <ArrowUpRight size={15} className="shrink-0 text-white/30 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
+              </a>
+
+              <div className="flex items-center gap-3.5 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent-orange/20 text-accent-orange">
+                  <MapPin size={18} />
+                </span>
+                <span>
+                  <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-white/40">Location</span>
+                  <span className="mt-0.5 block text-sm font-medium text-white">{siteConfig.location}</span>
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 rounded-2xl border border-accent-yellow/20 bg-accent-yellow/[0.07] px-4 py-3 text-[11px] text-white/60">
+                <Sparkles size={14} className="shrink-0 text-accent-yellow" />
+                Currently looking for a data engineering internship.
+              </div>
             </div>
           </div>
-        </FadeInView>
-
-        {/* CTA area */}
-        <FadeInView delay={0.2}>
-          <div className="bg-surface/60 border border-border rounded-2xl p-8 flex flex-col items-center justify-center text-center h-full min-h-[400px]">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center mb-6">
-              <Send size={28} className="text-white" />
-            </div>
-            <h3 className="text-2xl font-bold text-text-primary mb-3">
-              Ready to Talk?
-            </h3>
-            <p className="text-text-secondary text-sm mb-8 max-w-sm">
-              Send me an email and I'll get back to you as soon as possible. I'm always interested in 
-              hearing about data engineering challenges and open-source opportunities.
-            </p>
-            <a
-              href={`mailto:${siteConfig.email}`}
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-accent-blue text-navy-950 font-semibold rounded-xl hover:bg-accent-blue/90 transition-all hover:shadow-lg hover:shadow-accent-blue/20"
-            >
-              <Mail size={18} />
-              Send Email
-            </a>
-            <a
-              href={siteConfig.cvUrl}
-              download
-              className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 bg-surface border border-border text-text-secondary hover:text-text-primary rounded-xl hover:border-border-bright transition-all text-sm font-medium"
-            >
-              Download My CV
-            </a>
-          </div>
-        </FadeInView>
-      </div>
+        </div>
+      </FadeInView>
     </Section>
   );
 }

@@ -1,4 +1,6 @@
 // Centralized portfolio data — edit this file to update all content
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
 export const siteConfig = {
   name: 'Elhussieny Sabry',
   title: 'Data Engineer',
@@ -11,7 +13,7 @@ export const siteConfig = {
     github: 'https://github.com/elhussienysabry',
     linkedin: 'https://www.linkedin.com/in/elhussienysabry/',
   },
-  cvUrl: '/Elhussieny_Sabry_CV.pdf',
+  cvUrl: asset('CV.pdf'),
   education: {
     degree: 'Business Information Systems (BIS)',
     institution: 'Faculty of Commerce, Menoufia University',
@@ -184,43 +186,43 @@ export const skillCategories: SkillCategory[] = [
     title: 'Data Engineering',
     icon: 'database',
     skills: ['Python', 'SQL', 'ETL/ELT', 'Data Pipelines', 'Data Quality'],
-    color: '#38bdf8',
+    color: '#2f55ff',
   },
   {
     title: 'Data Processing',
     icon: 'cpu',
     skills: ['Apache Spark', 'Hadoop', 'HDFS', 'YARN', 'MapReduce'],
-    color: '#818cf8',
+    color: '#7357ff',
   },
   {
     title: 'Orchestration',
     icon: 'workflow',
     skills: ['Apache Airflow'],
-    color: '#a78bfa',
+    color: '#7357ff',
   },
   {
     title: 'Storage & Databases',
     icon: 'hard-drive',
     skills: ['PostgreSQL', 'DuckDB', 'SQLite', 'Parquet'],
-    color: '#34d399',
+    color: '#0b9e73',
   },
   {
     title: 'Analytics & Transformation',
     icon: 'bar-chart-3',
     skills: ['dbt', 'Pandas', 'Streamlit', 'Plotly'],
-    color: '#fb923c',
+    color: '#ff7a2f',
   },
   {
     title: 'Infrastructure & Dev',
     icon: 'container',
     skills: ['Docker', 'Git', 'GitHub', 'Linux'],
-    color: '#f472b6',
+    color: '#e8478c',
   },
   {
     title: 'Systems Knowledge',
     icon: 'book-open',
     skills: ['Database Internals', 'Distributed Systems', 'Storage Engines', 'Indexing', 'Concurrency Control'],
-    color: '#facc15',
+    color: '#e3ac1f',
   },
 ];
 
@@ -242,7 +244,7 @@ export const caseStudies: CaseStudy[] = [
     description:
       'A data pipeline moves data systematically through structured stages: extraction from raw sources, validation for quality and drift, transformation into curated analytical models, and loading into lakehouse storage. Each stage presents failure modes — schema changes, duplicate records, partial writes — that require engineering solutions like ingestion idempotency, circuit breakers, and schema registries.',
     icon: 'arrow-right-left',
-    color: '#38bdf8',
+    color: '#2f55ff',
     concepts: ['Source Extraction', 'Schema Validation', 'Idempotent Loading', 'Transformation Modeling', 'Data Quality Gates'],
   },
   {
@@ -252,7 +254,7 @@ export const caseStudies: CaseStudy[] = [
     description:
       'B-Tree indexes organize row pointers in a balanced, multi-way search tree where each disk page contains sorted keys and pointers. A query traverses from the root page to a leaf page in logarithmic disk I/O operations instead of scanning every sequential data page. Understanding page layouts, fill factors, composite key ordering, and covering indexes explains why query performance differs by orders of magnitude.',
     icon: 'git-branch',
-    color: '#818cf8',
+    color: '#7357ff',
     concepts: ['B-Tree Structure', 'Disk Page Layout', 'Composite Index Order', 'Index Scan vs. Seq Scan', 'Covering Indexes'],
   },
   {
@@ -262,7 +264,7 @@ export const caseStudies: CaseStudy[] = [
     description:
       'Apache Spark breaks logical computations into physical execution graphs: Actions trigger Jobs, which the DAG Scheduler divides into Stages at shuffle boundaries (wide dependencies like groupBy or join), which are executed as parallel Tasks across worker cores. Understanding narrow vs. wide transformations and partition counts is critical to preventing shuffle bottlenecks and memory spills.',
     icon: 'network',
-    color: '#a78bfa',
+    color: '#7357ff',
     concepts: ['DAG Scheduling', 'Narrow vs. Wide Transformations', 'Shuffle Partitions', 'Task Parallelism', 'Catalyst Optimizer'],
   },
   {
@@ -272,7 +274,7 @@ export const caseStudies: CaseStudy[] = [
     description:
       'Airflow models workflows as Directed Acyclic Graphs (DAGs). The Scheduler constantly parses DAG definitions, evaluates dependency states in the metadata database, and creates DagRuns and TaskInstances. The Executor (Local, Celery, or Kubernetes) queues tasks to worker processes. This decoupled architecture enables retries, backfills, dynamic task mapping, and SLA monitoring.',
     icon: 'calendar-clock',
-    color: '#34d399',
+    color: '#0b9e73',
     concepts: ['DAG Parsing Loop', 'Scheduler Heartbeat', 'Executor Queues', 'Task Lifecycle States', 'XCom Data Passing'],
   },
   {
@@ -282,7 +284,7 @@ export const caseStudies: CaseStudy[] = [
     description:
       'Production schemas inevitably drift: upstream APIs add fields, alter column types, or drop deprecated keys. Resilient pipelines implement automated schema detection at ingestion time. By defining explicit contracts, supporting additive changes, and triggering alerts or quarantine tables for breaking drift, data engineering systems protect downstream marts and BI dashboards from silent corruption.',
     icon: 'shield-check',
-    color: '#fb923c',
+    color: '#ff7a2f',
     concepts: ['Schema Drift Detection', 'Backward Compatibility', 'Data Contracts', 'Quarantine Routing', 'Data Lineage'],
   },
   {
@@ -292,7 +294,7 @@ export const caseStudies: CaseStudy[] = [
     description:
       'Distributed systems partition datasets across nodes for scalability and replicate data across racks for fault tolerance. This introduces trade-offs between consistency, availability, and partition tolerance (CAP Theorem). Understanding how consensus protocols (Raft/Paxos) work and how write-ahead logs guarantee durability provides the conceptual foundation for designing resilient big data platforms.',
     icon: 'server',
-    color: '#f472b6',
+    color: '#e8478c',
     concepts: ['Data Partitioning', 'Replication Topologies', 'CAP Trade-offs', 'Write-Ahead Logs (WAL)', 'Fault Recovery'],
   },
 ];
@@ -313,14 +315,26 @@ export const contributions: Contribution[] = [
   {
     id: 'airflow-pr',
     repository: 'apache/airflow',
-    prTitle: 'PR #75453',
+    prTitle: 'Document custom OTel metrics endpoint paths',
     prNumber: 75453,
-    contributionType: 'Open Source Contribution',
+    contributionType: 'Docs + regression test',
     description:
-      'Contributed to the Apache Airflow open source project. Inspected scheduler and execution internals. PR reference noted for verification against upstream repository.',
-    status: 'unverified',
+      'Documented how to configure custom OpenTelemetry metrics endpoint paths on non-default OTLP backends, and added an HTTP regression test verifying the path is preserved.',
+    status: 'open',
     url: 'https://github.com/apache/airflow/pull/75453',
-    date: '2025',
+    date: 'Oct 2026',
+  },
+  {
+    id: 'pandas-pr',
+    repository: 'pandas-dev/pandas',
+    prTitle: 'Fix parsing of UTC offsets without a colon or with seconds',
+    prNumber: 71490,
+    contributionType: 'Bug fix + tests',
+    description:
+      'Submitted a fix for parsing fixed UTC offsets without a colon or with seconds in timezones.pyx, with regression coverage across tslibs and dtype parsing.',
+    status: 'open',
+    url: 'https://github.com/pandas-dev/pandas/pull/71490',
+    date: 'Oct 2026',
   },
 ];
 
@@ -342,24 +356,24 @@ export const certifications: Certification[] = [
     id: 'nasa-space-apps-2026',
     title: 'NASA Space Apps Challenge 2026',
     issuer: 'National Aeronautics and Space Administration (NASA)',
-    date: 'October 2026',
-    imageUrl: '/certificates/nasa_space_apps_2026.png',
+    date: 'November 2026',
+    imageUrl: asset('certificates/nasa_space_apps_2026.webp'),
     verified: true,
     type: 'achievement',
     description:
       'Participated in the global NASA International Space Apps Challenge 2026, collaborating on space data solutions and engineering challenges using open data.',
-    badgeColor: '#38bdf8',
+    badgeColor: '#00a6c4',
   },
   {
     id: 'appsec-practitioner-v2',
     title: 'Certified AppSec Practitioner (CAP) V2',
     issuer: 'The SecOps Group',
-    date: '2026',
+    date: 'April 2025',
     verified: true,
     type: 'certification',
     description:
       'Certification validating knowledge of application security principles, defensive architecture, secure data handling, and vulnerability assessment.',
-    badgeColor: '#818cf8',
+    badgeColor: '#7357ff',
   },
   {
     id: 'cnsp',
@@ -370,18 +384,18 @@ export const certifications: Certification[] = [
     type: 'certification',
     description:
       'Professional credential verifying practical understanding of network security, protocols, secure communications, and infrastructure defense.',
-    badgeColor: '#34d399',
+    badgeColor: '#0b9e73',
   },
   {
     id: 'fullstack-dev',
     title: 'Full Stack Web Development',
-    issuer: 'Professional Training Program',
-    date: '2026',
+    issuer: 'Information Technology Institute (ITI)',
+    date: 'August 2025',
     verified: true,
     type: 'certification',
     description:
-      'Comprehensive program covering modern frontend, backend API architecture, relational database management, and cloud deployment fundamentals.',
-    badgeColor: '#fb923c',
+      'Intensive program covering modern frontend development, backend API architecture, relational database management, and deployment fundamentals.',
+    badgeColor: '#ff7a2f',
   },
   {
     id: 'career-dev-1',
@@ -392,7 +406,7 @@ export const certifications: Certification[] = [
     type: 'certification',
     description:
       'Professional development credential focusing on technical communication, business alignment, and collaborative engineering practices.',
-    badgeColor: '#a78bfa',
+    badgeColor: '#e8478c',
   },
 ];
 
@@ -414,7 +428,7 @@ export const learningTimeline: TimelineEntry[] = [
     description: 'Started with Python and foundational computer science principles. Built deep understanding of data structures, algorithmic complexity, and clean code architecture.',
     skills: ['Python', 'Data Structures', 'Algorithmic Thinking'],
     icon: 'code',
-    color: '#38bdf8',
+    color: '#2f55ff',
   },
   {
     id: 'sql-databases',
@@ -423,7 +437,7 @@ export const learningTimeline: TimelineEntry[] = [
     description: 'Mastered relational database modeling, complex SQL analytical queries, indexing mechanisms, and relational integrity. Began studying how databases structure disk storage and handle transactions.',
     skills: ['SQL', 'PostgreSQL', 'SQLite', 'Relational Design'],
     icon: 'database',
-    color: '#818cf8',
+    color: '#7357ff',
   },
   {
     id: 'etl-engineering',
@@ -432,7 +446,7 @@ export const learningTimeline: TimelineEntry[] = [
     description: 'Engineered production-grade data pipelines focusing on multi-source extraction, transformation modeling, schema drift detection, idempotent warehouse loading, and data quality circuit breakers.',
     skills: ['ETL/ELT', 'Data Pipelines', 'Data Quality', 'dbt'],
     icon: 'arrow-right-left',
-    color: '#a78bfa',
+    color: '#7357ff',
   },
   {
     id: 'big-data',
@@ -441,7 +455,7 @@ export const learningTimeline: TimelineEntry[] = [
     description: 'Explored distributed file systems and resource orchestration: HDFS for block storage, YARN for cluster management, and MapReduce paradigms for batch processing execution.',
     skills: ['Hadoop', 'HDFS', 'YARN', 'MapReduce'],
     icon: 'hard-drive',
-    color: '#34d399',
+    color: '#0b9e73',
   },
   {
     id: 'spark',
@@ -450,7 +464,7 @@ export const learningTimeline: TimelineEntry[] = [
     description: 'Built distributed standalone Spark clusters with Docker Compose. Analyzed execution internals: DAG compilation, shuffle operations, partition sizing, and Catalyst query optimization.',
     skills: ['Apache Spark', 'PySpark', 'Docker', 'Distributed Systems'],
     icon: 'cpu',
-    color: '#fb923c',
+    color: '#ff7a2f',
   },
   {
     id: 'orchestration',
@@ -459,7 +473,7 @@ export const learningTimeline: TimelineEntry[] = [
     description: 'Designed Directed Acyclic Graphs (DAGs) in Apache Airflow for robust workflow scheduling. Studied scheduler heartbeats, executor architectures, backfills, and task dependency graphs.',
     skills: ['Apache Airflow', 'DAGs', 'Task Lifecycle', 'Observability'],
     icon: 'workflow',
-    color: '#f472b6',
+    color: '#e8478c',
   },
   {
     id: 'systems',
@@ -468,7 +482,7 @@ export const learningTimeline: TimelineEntry[] = [
     description: 'Actively studying data system architectures: B-Tree vs. LSM-Tree storage engines, Write-Ahead Logging (WAL), MVCC concurrency control, and distributed consensus algorithms.',
     skills: ['Storage Engines', 'B-Tree Indexing', 'Concurrency Control', 'Distributed Internals'],
     icon: 'book-open',
-    color: '#facc15',
+    color: '#e3ac1f',
   },
 ];
 
@@ -481,5 +495,6 @@ export const navItems = [
   { label: 'Certifications', href: '#certifications' },
   { label: 'Open Source', href: '#open-source' },
   { label: 'Journey', href: '#journey' },
+  { label: 'Play', href: '#play' },
   { label: 'Contact', href: '#contact' },
 ] as const;
