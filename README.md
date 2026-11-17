@@ -15,7 +15,11 @@ Built with **React 19**, **TypeScript**, **Vite 6**, **Tailwind CSS v4**, **Fram
 - **Case studies** covering schema drift, idempotent loads, data quality gates, and observability.
 - **Certifications** with real certificate previews and a keyboard-friendly lightbox.
 - **Open-source section** featuring verified Apache Airflow and pandas pull requests.
-- **Learning journey** timeline from Python fundamentals to database internals.
+- **Interactive engineering roadmap** from Python fundamentals to database internals, with a
+  scroll-linked path, chapter jump rail, expandable milestone details, evidence notes, and a
+  distinct future horizon for Apache Kafka and Cloud Storage.
+- **Interactive architecture map** connecting sources, Kafka, Spark, cloud storage, and analytics,
+  with clickable nodes and honest built/next/planned states.
 - **Take a Break — Data Pipeline Challenge**: order Source → Ingestion → Processing → Storage →
   Analytics. Drag and drop on desktop, tap-to-place and arrow controls on touch devices. Includes a
   timer, attempt count, score, local best score, confetti, success state, and replay.
@@ -93,7 +97,23 @@ npm run preview    # http://localhost:4173
 ```
 
 Content lives in [`src/data/portfolio.ts`](src/data/portfolio.ts); section components are mostly
-presentational. Update the CV by replacing `public/CV.pdf` with the latest PDF (keep the filename).
+presentational. Roadmap milestones, statuses, objectives, evidence, and cross-technology
+connections all live in `roadmapMilestones`. Update the CV by replacing `public/CV.pdf` with the
+latest PDF (keep the filename).
+
+### Roadmap statuses
+
+| Status | Meaning |
+| --- | --- |
+| `completed` | Built and applied in a project on this site. |
+| `explored` | Studied and experimented with, but not production-built. |
+| `current` | Active study right now. |
+| `next` | The next planned learning goal. |
+| `planned` | A future goal after the previous milestone. |
+
+Apache Kafka is `next`; Cloud Storage & Cloud Data Infrastructure is `planned` after Kafka. Both
+render as dark "future horizon" cards and explicitly state that they are not current experience.
+Hadoop and Airflow are `explored`; database internals and distributed systems are `current`.
 
 ---
 
@@ -139,10 +159,14 @@ a persistent production deployment.
 
 - `npm run typecheck` — strict TypeScript, no errors.
 - `npm run build` — production bundle generated to `dist/`.
-- Lighthouse (mobile, local production preview): Performance 85, Accessibility 100,
-  Best Practices 100, SEO 100.
+- Lighthouse (mobile, local production preview): Performance 79–81 (run variance), Accessibility
+  100, Best Practices 100, SEO 100, CLS 0. The performance score reflects the motion-heavy hero
+  and roadmap; accessibility remains a hard constraint.
 - Manual QA covers desktop/tablet/mobile layouts, all navigation links, CV download/view,
   game completion/error/replay, reduced motion, and console/network errors.
+- Roadmap QA covers every status label, all 11 Kafka objectives, all 12 Cloud Storage objectives,
+  expandable cards, chapter jump links, architecture node focus/click states, the horizontal mobile
+  chapter rail, reduced-motion behavior, and overflow at 390 px.
 
 ---
 

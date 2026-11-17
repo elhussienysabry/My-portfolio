@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   motion, AnimatePresence, useReducedMotion, useInView, useScroll, useSpring, useTransform,
   type MotionValue,
@@ -17,6 +17,18 @@ const iconMap: Record<string, React.ElementType> = {
   code: Code, database: Database, 'arrow-right-left': ArrowRightLeft,
   'hard-drive': HardDrive, cpu: Cpu, workflow: Workflow,
   'book-open': BookOpen, radio: Radio, cloud: Cloud,
+};
+
+/** Darker variants keep small accent labels readable on the light canvas. */
+const readableAccent: Record<string, string> = {
+  '#2f55ff': '#2f55ff',
+  '#7357ff': '#5a3fe0',
+  '#0b9e73': '#0a7d5c',
+  '#ff7a2f': '#b84a00',
+  '#e8478c': '#b31e63',
+  '#e3ac1f': '#8a6200',
+  '#00a6c4': '#007e95',
+  '#9a7bff': '#5a3fe0',
 };
 
 /* ── Status configuration ── */
@@ -42,7 +54,7 @@ const statusConfig: Record<RoadmapStatus, {
     label: 'Explored',
     note: 'Studied and experimented with — not production-built.',
     icon: Compass,
-    color: '#c88a00',
+    color: '#8a6200',
     dotClass: 'bg-accent-yellow border-accent-yellow shadow-[0_0_12px_rgba(227,172,31,0.45)]',
     badgeBg: 'bg-accent-yellow/10', badgeText: 'text-amber-700', cardBorder: 'border-accent-yellow/30',
   },
@@ -50,7 +62,7 @@ const statusConfig: Record<RoadmapStatus, {
     label: 'In progress',
     note: 'Active study right now.',
     icon: Clock,
-    color: '#e8478c',
+    color: '#b31e63',
     dotClass: 'bg-accent-coral border-accent-coral shadow-[0_0_14px_rgba(242,85,85,0.55)]',
     badgeBg: 'bg-accent-coral/10', badgeText: 'text-coral-ink', cardBorder: 'border-accent-coral/30',
   },
@@ -58,7 +70,7 @@ const statusConfig: Record<RoadmapStatus, {
     label: 'Up next',
     note: 'The next planned learning goal.',
     icon: Rocket,
-    color: '#00a6c4',
+    color: '#007e95',
     dotClass: 'bg-accent-cyan border-accent-cyan shadow-[0_0_14px_rgba(0,166,196,0.5)]',
     badgeBg: 'bg-accent-cyan/10', badgeText: 'text-accent-cyan', cardBorder: 'border-accent-cyan/25',
   },
@@ -66,9 +78,9 @@ const statusConfig: Record<RoadmapStatus, {
     label: 'Planned',
     note: 'A future goal after the previous milestone.',
     icon: Flag,
-    color: '#7357ff',
+    color: '#5a3fe0',
     dotClass: 'bg-accent-purple/60 border-accent-purple/60 shadow-[0_0_10px_rgba(115,87,255,0.35)]',
-    badgeBg: 'bg-accent-purple/8', badgeText: 'text-accent-purple', cardBorder: 'border-accent-purple/20',
+    badgeBg: 'bg-accent-purple/8', badgeText: 'text-accent-violet', cardBorder: 'border-accent-purple/20',
   },
 };
 
@@ -220,7 +232,10 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
 
               {/* Phase + index + status */}
               <div className={metaRow}>
-                <span className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: milestone.color }}>
+                <span
+                  className="font-mono text-[9px] uppercase tracking-[0.18em]"
+                  style={{ color: isFuture ? milestone.color : (readableAccent[milestone.color] ?? milestone.color) }}
+                >
                   {milestone.phase}
                 </span>
                 <span className={`h-px w-4 ${isFuture ? 'bg-white/20' : 'bg-line-strong/70'}`} />
@@ -440,16 +455,20 @@ function ChapterRail({ activeId, onJump }: { activeId: string | null; onJump: (i
         {roadmapMilestones.map((milestone, index) => {
           const status = statusConfig[milestone.status];
           const active = activeId === milestone.id;
+          const current = milestone.status === 'current';
           return (
             <button
               key={milestone.id}
               type="button"
               onClick={() => onJump(milestone.id)}
               aria-current={active ? 'true' : undefined}
+              title={`${milestone.title} — ${status.label}`}
               className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10.5px] font-medium transition-all duration-200 ${
                 active
                   ? 'border-ink bg-ink text-cream shadow-soft'
-                  : 'border-line bg-cream/80 text-ink-soft hover:-translate-y-0.5 hover:border-line-strong'
+                  : current
+                    ? 'border-accent-coral/40 bg-accent-coral/[0.05] text-ink-soft hover:-translate-y-0.5 hover:border-accent-coral/60'
+                    : 'border-line bg-cream/80 text-ink-soft hover:-translate-y-0.5 hover:border-line-strong'
               }`}
             >
               <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: status.color }} />
@@ -510,23 +529,23 @@ function ProgressSummary() {
 /* ── Interactive architecture flow ── */
 const architectureNodes = [
   {
-    label: 'Data Sources', icon: Database, color: '#2f55ff', state: 'built' as const,
+    label: 'Data Sources', icon: Database, color: '#2f55ff', textColor: '#2f55ff', state: 'built' as const,
     role: 'PostgreSQL, APIs and flat files — the entry points every pipeline starts from.',
   },
   {
-    label: 'Kafka', icon: Radio, color: '#00a6c4', state: 'next' as const,
+    label: 'Kafka', icon: Radio, color: '#00a6c4', textColor: '#007e95', state: 'next' as const,
     role: 'The event backbone I am learning next: topics, partitions and consumer groups for real-time streams.',
   },
   {
-    label: 'Spark', icon: Cpu, color: '#ff7a2f', state: 'built' as const,
+    label: 'Spark', icon: Cpu, color: '#ff7a2f', textColor: '#b84a00', state: 'built' as const,
     role: 'Distributed batch and stream processing — built and tuned in the Spark-Docker Lab.',
   },
   {
-    label: 'Cloud Storage', icon: Cloud, color: '#7357ff', state: 'planned' as const,
+    label: 'Cloud Storage', icon: Cloud, color: '#9a7bff', textColor: '#5a3fe0', state: 'planned' as const,
     role: 'Object storage and data-lake foundations — planned after Kafka.',
   },
   {
-    label: 'Analytics', icon: Layers, color: '#0a7d5c', state: 'built' as const,
+    label: 'Analytics', icon: Layers, color: '#0a7d5c', textColor: '#0a7d5c', state: 'built' as const,
     role: 'Curated models, dashboards and decisions — where pipeline value becomes visible.',
   },
 ];
@@ -604,7 +623,7 @@ function ArchitectureFlow() {
                   </span>
                   <span
                     className="rounded-full px-1.5 py-0.5 text-[7px] font-semibold uppercase tracking-wider"
-                    style={{ backgroundColor: `${item.color}12`, color: item.color }}
+                    style={{ backgroundColor: `${item.color}12`, color: item.textColor }}
                   >
                     {stateLabel[item.state]}
                   </span>
@@ -628,7 +647,7 @@ function ArchitectureFlow() {
                 <p className="text-xs font-bold text-ink">{node.label}</p>
                 <span
                   className="rounded-full px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider"
-                  style={{ backgroundColor: `${node.color}12`, color: node.color }}
+                  style={{ backgroundColor: `${node.color}12`, color: node.textColor }}
                 >
                   {stateLabel[node.state]}
                 </span>
@@ -700,6 +719,28 @@ export function JourneySection() {
   });
 
   const activeChapter = expandedId;
+
+  // Deep links from project and case-study cards should open the matching milestone.
+  useEffect(() => {
+    const syncFromHash = () => {
+      const raw = window.location.hash.slice(1);
+      if (!raw.startsWith('milestone-')) return;
+      const id = raw.slice('milestone-'.length);
+      if (!roadmapMilestones.some((milestone) => milestone.id === id)) return;
+
+      setExpandedId(id);
+      window.setTimeout(() => {
+        document.getElementById(`milestone-${id}`)?.scrollIntoView({
+          behavior: reduced ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      }, 140);
+    };
+
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, [reduced]);
 
   const toggleExpand = useCallback((id: string) => {
     setExpandedId((previous) => (previous === id ? null : id));

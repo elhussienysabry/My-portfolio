@@ -580,7 +580,7 @@ export const roadmapMilestones: RoadmapMilestone[] = [
     id: 'orchestration',
     phase: 'Orchestration',
     title: 'Workflow Orchestration with Airflow',
-    description: 'Designed Directed Acyclic Graphs (DAGs) in Apache Airflow for robust workflow scheduling. Studied scheduler heartbeats, executor architectures, backfills, and task dependency graphs.',
+    description: 'Studied DAG design and workflow scheduling in Apache Airflow — scheduler heartbeats, executor architectures, backfills, and task dependency graphs.',
     skills: ['Apache Airflow', 'DAGs', 'Task Lifecycle', 'Observability'],
     icon: 'workflow',
     color: '#e8478c',
