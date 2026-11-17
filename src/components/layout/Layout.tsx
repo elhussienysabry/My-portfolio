@@ -311,8 +311,8 @@ export function Footer() {
       external: false,
     },
     {
-      label: 'Resume (PDF)',
-      value: 'View CV',
+      label: 'Resume',
+      value: 'PDF Document',
       href: siteConfig.cvUrl,
       download: 'Elhussieny-Sabry-CV.pdf',
       external: true,
@@ -332,146 +332,149 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative bg-ink text-cream border-t border-white/10 overflow-hidden">
-      <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
-        {/* Primary Area: Masthead & Monumental Wordmark */}
-        <div className="border-b border-white/10 pb-8 pt-16 sm:pb-10 sm:pt-20 lg:pt-24">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 sm:mb-8">
-            <div className="flex items-center gap-2.5">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-                00 / Index
-              </span>
-              <span className="h-px w-5 bg-white/15" aria-hidden="true" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/30">
-                Personal Portfolio
-              </span>
-            </div>
+    <footer className="relative bg-ink text-cream border-t border-white/[0.08] overflow-hidden">
+      {/* Subtle top hairline gradient */}
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-white/60">
-              <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-green opacity-40" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-green" />
-              </span>
-              Available for opportunities
+      <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
+        {/* Top Masthead Row: Identity & Status */}
+        <div className="pt-14 sm:pt-18 lg:pt-20 pb-6 flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06]">
+          <div className="flex items-center gap-3">
+            <span
+              className="grid h-7 w-7 place-items-center rounded-lg bg-cream/10 font-display text-[10px] font-extrabold text-cream"
+              aria-hidden="true"
+            >
+              ES
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="font-display text-sm font-bold tracking-tight text-white">Elhussieny Sabry</span>
+              <span className="h-1 w-1 rounded-full bg-white/25" aria-hidden="true" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">Data Engineer</span>
             </div>
           </div>
 
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={reduced ? false : { y: '20%', opacity: 0 }}
-              whileInView={reduced ? undefined : { y: 0, opacity: 1 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-[clamp(2.25rem,11.8vw,9.5rem)] font-extrabold uppercase leading-[0.82] tracking-[-0.035em] text-cream select-none transition-colors duration-300 hover:text-white"
-            >
-              ELHUSSIENY
-            </motion.h2>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-white/60">
+            <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-green opacity-40" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-green" />
+            </span>
+            Open to roles &amp; collaboration
           </div>
         </div>
 
-        {/* Content Hierarchy: Profile Statement, Navigation, and Connect */}
-        <div className="grid grid-cols-1 gap-12 py-12 sm:py-16 lg:grid-cols-12 lg:gap-14 border-b border-white/10">
-          {/* Profile & Focus */}
-          <div className="space-y-4 lg:col-span-6 lg:pr-6">
+        {/* Primary Visual Element: Typographic Signature Anchor */}
+        <div className="py-8 sm:py-12 lg:py-14 overflow-hidden border-b border-white/[0.06]">
+          <motion.h2
+            initial={reduced ? false : { y: '25%', opacity: 0 }}
+            whileInView={reduced ? undefined : { y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display text-[clamp(3.1rem,14vw,11.5rem)] font-extrabold uppercase leading-[0.8] tracking-[-0.04em] text-cream select-none transition-colors duration-500 hover:text-white"
+          >
+            ELHUSSIENY
+          </motion.h2>
+        </div>
+
+        {/* Clear Content Hierarchy: Primary Statement, Navigation, and Connect */}
+        <div className="grid grid-cols-1 gap-12 py-12 sm:py-16 md:grid-cols-12 md:gap-10 lg:gap-16 border-b border-white/[0.06]">
+          {/* Primary Area: Description & Identity Statement */}
+          <div className="space-y-4 md:col-span-6 lg:col-span-6">
             <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent-blue" aria-hidden="true" />
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-                Profile &amp; Focus
+              <span className="h-1.5 w-1.5 rounded-full bg-accent-cyan" aria-hidden="true" />
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-cyan">
+                Systems &amp; Engineering Ethos
               </p>
             </div>
 
-            <p className="font-display text-lg sm:text-xl font-bold leading-snug tracking-tight text-cream">
-              Data Engineer focused on building dependable data pipelines, studying database internals, and solving systems problems from ingestion to insight.
+            <p className="font-display text-lg sm:text-xl font-bold leading-snug tracking-tight text-cream max-w-lg">
+              Designing dependable data pipelines, distributed compute systems, and storage engines that turn complex data flows into trusted insights.
             </p>
 
-            <p className="text-sm text-white/60 leading-relaxed max-w-lg">
-              Studying Business Information Systems at Menoufia University. Dedicated to storage engine mechanics, distributed compute with Spark, robust orchestration with Airflow, and active open-source contribution.
+            <p className="text-sm text-white/60 leading-relaxed max-w-md">
+              Committed to deep systems understanding — from database internal layout and columnar file formats to distributed orchestration with Spark and Airflow.
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-white/45 font-mono">
-              <span className="inline-flex items-center gap-1.5">
+            <div className="pt-3 flex flex-wrap items-center gap-3 text-xs font-mono text-white/45">
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5">
                 <MapPin size={12} className="text-accent-orange shrink-0" />
                 {siteConfig.location}
               </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-1 w-1 rounded-full bg-accent-green" />
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent-green" />
                 UTC+2 · Open to remote &amp; relocation
               </span>
             </div>
           </div>
 
-          {/* Navigation & Connect 2-Column Split */}
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-6 lg:gap-10">
-            {/* Navigation Area */}
-            <div className="space-y-4">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-                Navigation
-              </p>
-              <ul className="space-y-1">
-                {footerNav.map((item) => (
-                  <li key={item.href}>
-                    <a
-                      href={item.href}
-                      onClick={(e) => handleNavClick(e, item.href)}
-                      className="group flex items-center justify-between py-2 text-sm text-white/70 transition-colors hover:text-cream border-b border-white/[0.05]"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <span className="font-mono text-[10px] text-white/30 group-hover:text-accent-cyan transition-colors">
-                          {item.index}
-                        </span>
-                        <span className="font-medium group-hover:translate-x-0.5 transition-transform duration-200">
-                          {item.label}
-                        </span>
+          {/* Navigation Area */}
+          <div className="space-y-4 md:col-span-3 lg:col-span-3">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
+              Navigation
+            </p>
+            <ul className="space-y-1">
+              {footerNav.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                    className="group flex items-center justify-between py-2 text-sm text-white/70 transition-colors hover:text-cream border-b border-white/[0.04]"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <span className="font-mono text-[10px] text-white/30 group-hover:text-accent-cyan transition-colors">
+                        {item.index}
                       </span>
-                      <ArrowRight size={13} className="text-white/20 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent-cyan" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Connect Area */}
-            <div className="space-y-4">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-                Connect
-              </p>
-              <ul className="space-y-1">
-                {connectLinks.map((item) => (
-                  <li key={item.label}>
-                    <a
-                      href={item.href}
-                      target={item.external ? '_blank' : undefined}
-                      rel={item.external ? 'noopener noreferrer' : undefined}
-                      download={item.download}
-                      className="group flex items-center justify-between py-2 text-sm text-white/70 transition-colors hover:text-cream border-b border-white/[0.05]"
-                    >
                       <span className="font-medium group-hover:translate-x-0.5 transition-transform duration-200">
                         {item.label}
                       </span>
-                      <span className="flex items-center gap-1.5 font-mono text-[11px] text-white/35 transition-colors group-hover:text-accent-cyan">
-                        <span className="hidden sm:inline text-[10px] text-white/30 group-hover:text-white/60 transition-colors">
-                          {item.value}
-                        </span>
-                        <ArrowUpRight
-                          size={13}
-                          className="shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                        />
+                    </span>
+                    <ArrowRight size={13} className="text-white/20 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent-cyan" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Connect Area */}
+          <div className="space-y-4 md:col-span-3 lg:col-span-3">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
+              Connect
+            </p>
+            <ul className="space-y-1">
+              {connectLinks.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    target={item.external ? '_blank' : undefined}
+                    rel={item.external ? 'noopener noreferrer' : undefined}
+                    download={item.download}
+                    className="group flex items-center justify-between py-2 text-sm text-white/70 transition-colors hover:text-cream border-b border-white/[0.04]"
+                  >
+                    <span className="font-medium group-hover:translate-x-0.5 transition-transform duration-200">
+                      {item.label}
+                    </span>
+                    <span className="flex items-center gap-1.5 font-mono text-[11px] text-white/35 transition-colors group-hover:text-accent-cyan">
+                      <span className="hidden sm:inline text-[10px] text-white/30 group-hover:text-white/60 transition-colors">
+                        {item.value}
                       </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                      <ArrowUpRight
+                        size={13}
+                        className="shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      />
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright, Motif, and Back to Top */}
-        <div className="flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between text-xs text-white/45">
+        {/* Bottom Bar: Copyright, Pipeline Motif, and Back to Top */}
+        <div className="flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between text-xs text-white/40">
           <div className="flex items-center gap-2">
             <span>© {year} {siteConfig.name}. All rights reserved.</span>
           </div>
 
-          <div className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-white/30 lg:block">
+          <div className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/30 md:block">
             Source → Ingestion → Processing → Storage → Analytics
           </div>
 

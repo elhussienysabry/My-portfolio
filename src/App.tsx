@@ -8,7 +8,6 @@ import { CaseStudiesSection } from '@/components/sections/CaseStudiesSection';
 import { CertificationsSection } from '@/components/sections/CertificationsSection';
 import { OpenSourceSection } from '@/components/sections/OpenSourceSection';
 import { JourneySection } from '@/components/sections/JourneySection';
-import { GameSection } from '@/components/sections/GameSection';
 import { ContactSection } from '@/components/sections/ContactSection';
 import { SectionDivider } from '@/components/ui/Components';
 
@@ -33,9 +32,7 @@ export default function App() {
         <OpenSourceSection />
         <SectionDivider insight="Every technology learned opens the path to the next." />
         <JourneySection />
-        <SectionDivider />
-        <GameSection />
-        <SectionDivider />
+        <SectionDivider insight="Have a data system challenge or an opportunity to discuss?" />
         <ContactSection />
       </main>
 

@@ -712,6 +712,5 @@ export const navItems = [
   { label: 'Certifications', href: '#certifications' },
   { label: 'Open Source', href: '#open-source' },
   { label: 'Roadmap', href: '#journey' },
-  { label: 'Play', href: '#play' },
   { label: 'Contact', href: '#contact' },
 ] as const;

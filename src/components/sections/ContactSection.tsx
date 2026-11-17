@@ -10,7 +10,7 @@ export function ContactSection() {
   return (
     <Section
       id="contact"
-      label="09 — Contact"
+      label="08 — Contact"
       title={
         <>
           Have a problem worth <span className="font-serif italic font-normal text-gradient">solving?</span>
