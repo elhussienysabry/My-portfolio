@@ -4,7 +4,7 @@ import { siteConfig } from '@/data/portfolio';
 import {
   Github, Linkedin, Download, ArrowDown, Database, Server, HardDrive,
   BarChart3, Cpu, ArrowDownToLine, ExternalLink, FileText, MapPin,
-  CheckCircle2, GitPullRequest, Sparkles,
+  CheckCircle2, GitPullRequest, Pause, Play,
 } from 'lucide-react';
 
 const stages = [
@@ -15,10 +15,23 @@ const stages = [
   { label: 'Analytics', Icon: BarChart3, color: '#ff7a2f', note: 'KPI reporting, SQL queries & real-time dashboards' },
 ];
 
-const marqueeItems = [
-  'Python', 'SQL', 'Apache Airflow', 'Apache Spark', 'dbt',
-  'PostgreSQL', 'DuckDB', 'Docker', 'Parquet', 'pytest',
-  'Apache Kafka', 'Cloud Storage',
+type StackItem = { name: string; mark: string; color: string; note?: 'learning' | 'planned' };
+
+const stackItems: StackItem[] = [
+  { name: 'Python', mark: 'PY', color: '#2f55ff' },
+  { name: 'SQL', mark: 'SQL', color: '#7357ff' },
+  { name: 'ETL / ELT', mark: 'ELT', color: '#5a3fe0' },
+  { name: 'Apache Airflow', mark: 'AF', color: '#b31e63' },
+  { name: 'Apache Spark', mark: 'SPK', color: '#b84a00' },
+  { name: 'dbt', mark: 'DBT', color: '#0a7d5c' },
+  { name: 'PostgreSQL', mark: 'PG', color: '#2f55ff' },
+  { name: 'DuckDB', mark: 'DDB', color: '#8a6200' },
+  { name: 'Parquet', mark: 'PQ', color: '#007e95' },
+  { name: 'Hadoop', mark: 'HDP', color: '#0a7d5c' },
+  { name: 'Docker', mark: 'DK', color: '#007e95' },
+  { name: 'Git', mark: 'GIT', color: '#b84a00' },
+  { name: 'Apache Kafka', mark: 'KFK', color: '#007e95', note: 'learning' },
+  { name: 'Cloud Storage', mark: 'S3', color: '#5a3fe0', note: 'planned' },
 ];
 
 function PipelinePreview() {
@@ -170,29 +183,125 @@ function PipelinePreview() {
   );
 }
 
-function TechMarquee() {
+function StackToken({ item }: { item: StackItem }) {
   return (
-    <div className="relative overflow-hidden border-y border-line bg-cream/70 py-4">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-paper to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-paper to-transparent" />
-      <div className="flex w-max animate-marquee whitespace-nowrap">
-        {[0, 1].map((group) => (
-          <div key={group} className="flex shrink-0 items-center" aria-hidden={group === 1}>
-            {marqueeItems.map((item, i) => (
-              <span key={`${group}-${item}`} className="flex items-center">
-                <span className="px-5 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink-soft">
-                  {item}
-                </span>
-                <Sparkles
-                  size={11}
-                  className="shrink-0"
-                  style={{ color: ['#2f55ff', '#00a6c4', '#7357ff', '#0b9e73', '#ff7a2f', '#e8478c'][i % 6] }}
-                />
-              </span>
-            ))}
+    <span className="group/token flex shrink-0 items-center gap-2.5 border-l border-line/70 px-4 py-1.5 transition-colors first:border-l-0 hover:bg-paper/80">
+      <span
+        aria-hidden="true"
+        className="grid h-6 w-6 place-items-center rounded-md border font-mono text-[8px] font-bold tracking-[-0.02em] transition-transform duration-300 group-hover/token:-translate-y-0.5"
+        style={{
+          borderColor: `${item.color}3d`,
+          backgroundColor: `${item.color}0c`,
+          color: item.color,
+        }}
+      >
+        {item.mark}
+      </span>
+      <span className="whitespace-nowrap font-display text-[12.5px] font-semibold tracking-[-0.01em] text-ink-soft transition-colors group-hover/token:text-ink">
+        {item.name}
+      </span>
+      {item.note && (
+        <span className="whitespace-nowrap rounded-full border border-dashed border-line-strong/70 px-1.5 py-px font-mono text-[7px] uppercase tracking-[0.1em] text-muted">
+          {item.note}
+        </span>
+      )}
+    </span>
+  );
+}
+
+function TechMarquee() {
+  const reduced = useReducedMotion();
+  const [paused, setPaused] = React.useState(false);
+
+  const pauseLabel = paused ? 'Resume technology marquee' : 'Pause technology marquee';
+
+  return (
+    <div role="group" aria-label="Technology stack" className="relative border-y border-line bg-cream/55">
+      <div className="mx-auto flex w-full max-w-7xl items-stretch">
+        <div className="hidden w-48 shrink-0 flex-col justify-center gap-2 border-r border-line/70 px-5 py-3 sm:flex">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <span className="font-mono text-[8.5px] uppercase tracking-[0.2em] text-muted">Stack index</span>
+              <p className="mt-1 font-display text-[13px] font-bold leading-none tracking-tight text-ink">
+                Toolchain <span className="font-mono text-[8px] font-medium text-muted">/ 14</span>
+              </p>
+            </div>
+            {!reduced && (
+              <button
+                type="button"
+                onClick={() => setPaused((value) => !value)}
+                aria-label={pauseLabel}
+                aria-pressed={paused}
+                className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-md border border-line/80 bg-paper/60 text-muted transition-colors hover:border-line-strong hover:text-ink"
+              >
+                {paused ? <Play size={9} fill="currentColor" /> : <Pause size={9} />}
+              </button>
+            )}
           </div>
-        ))}
+          <div className="flex items-center gap-3 font-mono text-[7px] uppercase tracking-[0.12em] text-muted">
+            <span className="inline-flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-ink/70" />
+              core
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full border border-dashed border-muted" />
+              learning
+            </span>
+          </div>
+        </div>
+
+        <div className="flex min-w-0 flex-1 flex-col justify-center">
+          <div className="flex items-center justify-between px-5 pb-0.5 pt-3 sm:hidden">
+            <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-muted">
+              Stack index · 14 tools
+            </span>
+            {!reduced && (
+              <button
+                type="button"
+                onClick={() => setPaused((value) => !value)}
+                aria-label={pauseLabel}
+                aria-pressed={paused}
+                className="grid h-7 w-7 place-items-center rounded-md border border-line/80 bg-paper/60 text-muted"
+              >
+                {paused ? <Play size={10} fill="currentColor" /> : <Pause size={10} />}
+              </button>
+            )}
+          </div>
+
+          <div className={`relative overflow-hidden py-2.5 sm:py-3 ${reduced ? '' : 'stack-mask'}`}>
+            {reduced ? (
+              <div aria-hidden="true" className="flex flex-wrap items-center">
+                {stackItems.map((item) => (
+                  <StackToken key={item.name} item={item} />
+                ))}
+              </div>
+            ) : (
+              <div
+                aria-hidden="true"
+                className="stack-marquee flex w-max"
+                style={paused ? { animationPlayState: 'paused' } : undefined}
+              >
+                {[0, 1, 2, 3].map((group) => (
+                  <div key={group} className="flex shrink-0 items-center">
+                    {stackItems.map((item) => (
+                      <StackToken key={`${group}-${item.name}`} item={item} />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
+
+      <ul className="sr-only">
+        {stackItems.map((item) => (
+          <li key={item.name}>
+            {item.name}
+            {item.note ? ` (${item.note})` : ''}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -217,8 +326,8 @@ export function HeroSection() {
       />
 
       <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
-        <div className="grid items-center gap-12 pb-14 pt-6 lg:grid-cols-12 lg:gap-10 lg:pb-20 lg:pt-10">
-          <div className="lg:col-span-7">
+        <div className="grid grid-cols-1 items-center gap-12 pb-14 pt-6 lg:grid-cols-12 lg:gap-10 lg:pb-20 lg:pt-10">
+          <div className="min-w-0 lg:col-span-7">
             <motion.div
               initial={reduced ? false : { y: 18 }}
               animate={{ y: 0 }}
@@ -338,7 +447,7 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          <div className="lg:col-span-5">
+          <div className="min-w-0 lg:col-span-5">
             <PipelinePreview />
           </div>
         </div>

@@ -105,15 +105,24 @@ function TimelinePath({
       }
     >
       <div className="absolute inset-0 w-px bg-gradient-to-b from-line-strong/70 via-line-strong/40 to-line-strong/20" />
+      <div
+        className={`absolute inset-y-0 ${isDesktop ? 'left-1/2 w-3 -translate-x-1/2' : 'left-1/2 w-3 -translate-x-1/2'} opacity-70`}
+        style={{
+          backgroundImage:
+            'repeating-linear-gradient(to bottom, rgba(21,22,31,0.22) 0 1px, transparent 1px 54px)',
+        }}
+      />
       <motion.div
         data-roadmap-fill
-        className="absolute left-0 top-0 w-px origin-top bg-gradient-to-b from-accent-blue via-accent-purple to-accent-cyan"
+        className="absolute left-0 top-0 w-px origin-top bg-gradient-to-b from-accent-blue via-accent-purple to-accent-cyan shadow-[0_0_12px_rgba(115,87,255,0.35)]"
         style={{ scaleY: reduced ? 1 : progress }}
       />
+      <span className="absolute -left-[2px] top-0 h-[5px] w-[5px] rounded-full bg-line-strong" />
+      <span className="absolute -bottom-1 -left-[3px] h-[7px] w-[7px] rounded-full border border-line-strong bg-paper" />
       {!reduced && (
         <motion.span
           data-roadmap-tip
-          className="absolute left-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-accent-cyan shadow-[0_0_18px_rgba(0,166,196,0.9)]"
+          className="absolute left-1/2 z-10 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-paper bg-accent-cyan shadow-[0_0_18px_rgba(0,166,196,0.85)]"
           style={{ top: tip }}
         />
       )}
@@ -122,28 +131,32 @@ function TimelinePath({
 }
 
 /* ── Small connection chip ── */
-function ConnectionBadge({ label, dark = false }: { label: string; dark?: boolean }) {
+function ConnectionBadge({ label, dark = false, onClick }: { label: string; dark?: boolean; onClick?: () => void }) {
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1 text-[10px] font-medium ${
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group inline-flex max-w-full items-center gap-1.5 rounded-xl border px-2.5 py-1 text-left text-[10px] font-medium transition-all duration-200 hover:-translate-y-0.5 ${
         dark
-          ? 'border-white/10 bg-white/[0.05] text-white/65'
-          : 'border-accent-blue/20 bg-accent-blue/[0.06] text-accent-blue'
+          ? 'border-white/10 bg-white/[0.05] text-white/65 hover:border-white/25 hover:text-white'
+          : 'border-accent-blue/20 bg-accent-blue/[0.06] text-accent-blue hover:border-accent-blue/40 hover:bg-accent-blue/[0.09]'
       }`}
+      aria-label={`Jump to ${label}`}
     >
-      <GitBranch size={10} />
-      {label}
-    </span>
+      <GitBranch size={10} className="shrink-0" />
+      <span>{label}</span>
+      <ArrowRight size={9} className="shrink-0 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-70" />
+    </button>
   );
 }
 
 /* ── Future horizon divider ── */
 function FutureHorizon() {
   return (
-    <div className="relative my-7 lg:my-10">
+    <div className="relative my-8 lg:my-11">
       <div
         aria-hidden="true"
-        className="absolute left-0 right-0 top-1/2 border-t border-dashed border-line-strong/60 lg:left-[8%] lg:right-[8%]"
+        className="absolute left-[1.15rem] right-0 top-1/2 border-t border-dashed border-line-strong/60 lg:left-[8%] lg:right-[8%]"
       />
       <div className="relative flex pl-12 lg:justify-center lg:pl-0">
         <div className="inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-full border border-white/10 bg-ink px-4 py-2 shadow-lift">
@@ -151,10 +164,11 @@ function FutureHorizon() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-cyan opacity-50" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-cyan" />
           </span>
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-white/75">
+          <span className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-white/80">
             The horizon
           </span>
-          <span className="text-[10px] text-white/60">future learning goals — not current experience</span>
+          <span className="h-3 w-px bg-white/20" />
+          <span className="text-[10px] text-white/55">future learning · not current experience</span>
         </div>
       </div>
     </div>
@@ -162,10 +176,11 @@ function FutureHorizon() {
 }
 
 /* ── Expandable milestone card ── */
-function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
-  milestone: RoadmapMilestone; index: number; isExpanded: boolean; onToggle: () => void;
+function MilestoneCard({ milestone, index, isExpanded, onToggle, onJump }: {
+  milestone: RoadmapMilestone; index: number; isExpanded: boolean; onToggle: () => void; onJump: (id: string) => void;
 }) {
   const reduced = useReducedMotion();
+  const [nodeOpen, setNodeOpen] = React.useState(false);
   const isLeft = index % 2 === 0;
   const IconComp = iconMap[milestone.icon] || Code;
   const status = statusConfig[milestone.status];
@@ -173,9 +188,10 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
   const isFuture = milestone.status === 'next' || milestone.status === 'planned';
   const isCurrent = milestone.status === 'current';
   const detailsId = `milestone-details-${milestone.id}`;
+  const objectiveCount = milestone.learningObjectives?.length ?? 0;
 
-  const metaRow = `flex flex-wrap items-center gap-2 ${isLeft ? 'lg:justify-end' : ''}`;
-  const sideList = `flex flex-wrap gap-1.5 ${isLeft ? 'lg:justify-end' : ''}`;
+  const metaRow = 'flex flex-wrap items-center gap-2';
+  const sideList = 'flex flex-wrap gap-1.5';
   const detailLabel = `mb-2 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.16em] ${
     isFuture ? 'text-white/55' : 'text-muted'
   }`;
@@ -190,9 +206,9 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
         className={`relative flex scroll-mt-28 items-start ${isLeft ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
       >
         {/* Card */}
-        <div className={`w-full pl-12 lg:w-1/2 lg:pl-0 ${isLeft ? 'lg:pr-14' : 'lg:pl-14'}`}>
+        <div className={`relative w-full pl-12 lg:w-1/2 lg:pl-0 ${isLeft ? 'lg:pr-14' : 'lg:pl-14'}`}>
           <div
-            className={`group relative overflow-hidden rounded-[1.5rem] border p-5 transition-all duration-300 hover:-translate-y-1 sm:p-6 ${
+            className={`group relative overflow-hidden rounded-[1.6rem] border p-5 transition-all duration-300 hover:-translate-y-0.5 sm:p-6 ${
               isFuture
                 ? 'border-white/10 bg-ink shadow-[0_28px_60px_-32px_rgba(21,22,31,0.8)] hover:border-white/20'
                 : `shadow-soft hover:shadow-lift ${status.cardBorder}`
@@ -204,6 +220,11 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
                 : undefined,
             }}
           >
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-6 top-0 h-px"
+              style={{ background: `linear-gradient(90deg, transparent, ${milestone.color}80, transparent)` }}
+            />
             {isFuture && (
               <span
                 aria-hidden="true"
@@ -251,7 +272,7 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
               </div>
 
               {/* Title + description */}
-              <h3 className={`mt-2 font-display text-xl font-bold tracking-tight ${isFuture ? 'text-white' : 'text-ink'} ${isLeft ? 'lg:text-right' : ''}`}>
+              <h3 className={`mt-2 font-display text-xl font-bold tracking-tight ${isFuture ? 'text-white' : 'text-ink'}`}>
                 {milestone.title}
               </h3>
               <p className={`mt-2 text-sm leading-relaxed ${isFuture ? 'text-white/65' : 'text-ink-soft'}`}>
@@ -279,14 +300,22 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
               {milestone.connections && milestone.connections.length > 0 && (
                 <div className={`mt-3 ${sideList}`}>
                   {milestone.connections.map((conn) => (
-                    <ConnectionBadge key={conn.targetId} label={conn.label} dark={isFuture} />
+                    <ConnectionBadge
+                      key={conn.targetId}
+                      label={conn.label}
+                      dark={isFuture}
+                      onClick={() => onJump(conn.targetId)}
+                    />
                   ))}
                 </div>
               )}
 
               {/* Expand toggle */}
               {(milestone.learningObjectives || milestone.businessRelevance || milestone.useCases || milestone.evidence) && (
-                <div className={`mt-4 flex ${isLeft ? 'lg:justify-end' : ''}`}>
+                <div className="mt-4 flex items-center justify-between gap-3">
+                  <span className={`font-mono text-[9px] uppercase tracking-[0.14em] ${isFuture ? 'text-white/40' : 'text-muted'}`}>
+                    {objectiveCount > 0 ? `${objectiveCount} objectives` : 'Details'}
+                  </span>
                   <button
                     type="button"
                     onClick={onToggle}
@@ -406,6 +435,14 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
               </AnimatePresence>
             </div>
           </div>
+
+          <span
+            aria-hidden="true"
+            className={`absolute top-10 hidden h-px w-14 lg:block ${isLeft ? 'right-0' : 'left-0'}`}
+            style={{
+              backgroundImage: `linear-gradient(to ${isLeft ? 'right' : 'left'}, ${milestone.color}70, transparent)`,
+            }}
+          />
         </div>
 
         {/* Timeline node */}
@@ -426,17 +463,40 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
                 transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }}
               />
             )}
-            <div
-              className={`grid h-9 w-9 place-items-center rounded-xl border-2 shadow-sm transition-all duration-300 ${
+            <button
+              type="button"
+              onClick={onToggle}
+              onMouseEnter={() => setNodeOpen(true)}
+              onMouseLeave={() => setNodeOpen(false)}
+              onFocus={() => setNodeOpen(true)}
+              onBlur={() => setNodeOpen(false)}
+              aria-expanded={isExpanded}
+              aria-controls={detailsId}
+              aria-describedby={`node-note-${milestone.id}`}
+              aria-label={`${status.label}: ${milestone.title}. ${isExpanded ? 'Collapse' : 'Expand'} details.`}
+              className={`grid h-9 w-9 place-items-center rounded-xl border-2 shadow-sm transition-all duration-300 hover:scale-105 focus-visible:scale-105 ${
                 isFuture ? 'border-dashed bg-ink' : 'bg-paper'
               }`}
               style={{ borderColor: milestone.color, color: milestone.color }}
             >
               <IconComp size={16} />
-            </div>
+            </button>
             <span
+              aria-hidden="true"
               className={`absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-paper ${status.dotClass}`}
             />
+            <span
+              id={`node-note-${milestone.id}`}
+              role="tooltip"
+              className={`pointer-events-none absolute left-0 top-full z-30 mt-2 w-44 rounded-xl border border-white/10 bg-ink px-3 py-2 text-left text-[10px] leading-relaxed text-white/65 shadow-lift transition-all duration-200 lg:left-1/2 lg:-translate-x-1/2 ${
+                nodeOpen ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
+              }`}
+            >
+              <span className="block font-mono text-[8px] uppercase tracking-[0.14em]" style={{ color: milestone.color }}>
+                {status.label}
+              </span>
+              <span className="mt-0.5 block">{status.note}</span>
+            </span>
           </motion.div>
         </div>
 
@@ -451,11 +511,12 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
 function ChapterRail({ activeId, onJump }: { activeId: string | null; onJump: (id: string) => void }) {
   return (
     <div className="-mx-1 mb-7 overflow-x-auto px-1 pb-2 no-scrollbar">
-      <div role="navigation" aria-label="Jump to a roadmap milestone" className="flex min-w-max gap-2">
+      <div role="navigation" aria-label="Jump to a roadmap milestone" className="flex min-w-max snap-x gap-2">
         {roadmapMilestones.map((milestone, index) => {
           const status = statusConfig[milestone.status];
           const active = activeId === milestone.id;
           const current = milestone.status === 'current';
+          const isFuture = milestone.status === 'next' || milestone.status === 'planned';
           return (
             <button
               key={milestone.id}
@@ -463,19 +524,21 @@ function ChapterRail({ activeId, onJump }: { activeId: string | null; onJump: (i
               onClick={() => onJump(milestone.id)}
               aria-current={active ? 'true' : undefined}
               title={`${milestone.title} — ${status.label}`}
-              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10.5px] font-medium transition-all duration-200 ${
+              className={`inline-flex snap-start items-center gap-2 rounded-full border px-3 py-1.5 transition-all duration-200 ${
                 active
                   ? 'border-ink bg-ink text-cream shadow-soft'
                   : current
                     ? 'border-accent-coral/40 bg-accent-coral/[0.05] text-ink-soft hover:-translate-y-0.5 hover:border-accent-coral/60'
-                    : 'border-line bg-cream/80 text-ink-soft hover:-translate-y-0.5 hover:border-line-strong'
+                    : isFuture
+                      ? 'border-dashed border-line-strong/70 bg-cream/60 text-muted hover:-translate-y-0.5 hover:border-line-strong hover:text-ink-soft'
+                      : 'border-line bg-cream/80 text-ink-soft hover:-translate-y-0.5 hover:border-line-strong'
               }`}
             >
-              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: status.color }} />
-              {milestone.phase}
-              <span className={`font-mono text-[8px] ${active ? 'text-white/60' : 'text-muted'}`}>
+              <span className={`font-mono text-[8px] ${active ? 'text-white/50' : 'text-muted'}`}>
                 {String(index + 1).padStart(2, '0')}
               </span>
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: status.color }} />
+              <span className="font-display text-[11px] font-semibold tracking-tight">{milestone.phase}</span>
             </button>
           );
         })}
@@ -486,37 +549,71 @@ function ChapterRail({ activeId, onJump }: { activeId: string | null; onJump: (i
 
 /* ── Progress summary ── */
 function ProgressSummary() {
+  const counts = statusOrder.map((statusKey) => ({
+    statusKey,
+    ...statusConfig[statusKey],
+    count: roadmapMilestones.filter((milestone) => milestone.status === statusKey).length,
+  }));
+  const total = roadmapMilestones.length;
+  const label = counts.map((item) => `${item.count} ${item.label.toLowerCase()}`).join(', ');
+
   return (
     <FadeInView>
-      <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-5 lg:gap-3">
-        {statusOrder.map((statusKey) => {
-          const status = statusConfig[statusKey];
-          const count = roadmapMilestones.filter((milestone) => milestone.status === statusKey).length;
-          return (
-            <div
-              key={statusKey}
-              className={`flex items-center gap-3 rounded-xl border p-3 transition-all duration-200 hover:-translate-y-0.5 ${
-                statusKey === 'planned' ? 'col-span-2 sm:col-span-1' : ''
-              }`}
-              style={{ borderColor: `${status.color}25`, backgroundColor: `${status.color}06` }}
-              title={status.note}
-            >
-              <span
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-lg"
-                style={{ backgroundColor: `${status.color}14`, color: status.color }}
-              >
-                <status.icon size={16} />
-              </span>
-              <div>
-                <span className="block font-display text-xl font-extrabold leading-none" style={{ color: status.color }}>
-                  {count}
-                </span>
-                <span className="block font-mono text-[8px] uppercase tracking-[0.14em] text-muted">{status.label}</span>
-              </div>
+      <div className="mb-8 overflow-hidden rounded-2xl border border-line bg-cream/70 shadow-soft">
+        <div className="flex flex-col gap-5 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-4">
+          <div className="flex items-start gap-3">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-ink text-cream">
+              <Compass size={17} />
+            </span>
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted">Journey status</p>
+              <p className="mt-1 font-display text-base font-bold tracking-tight text-ink sm:text-[17px]">
+                {counts[0].count} built
+                <span className="mx-1.5 text-line-strong">·</span>
+                {counts[1].count} explored
+                <span className="mx-1.5 text-line-strong">·</span>
+                {counts[2].count} active
+                <span className="mx-1.5 text-line-strong">·</span>
+                {counts[3].count + counts[4].count} ahead
+              </p>
+              <p className="mt-0.5 text-[11px] text-muted">Foundations → systems → the horizon.</p>
             </div>
-          );
-        })}
+          </div>
+
+          <div className="w-full sm:w-64">
+            <div className="flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.14em] text-muted">
+              <span>foundations</span>
+              <span>horizon</span>
+            </div>
+            <div
+              role="img"
+              aria-label={`Learning status distribution across ${total} milestones: ${label}.`}
+              className="mt-1.5 flex h-2 gap-0.5 overflow-hidden rounded-full bg-line/40"
+            >
+              {counts.map((item) => (
+                <span
+                  key={item.statusKey}
+                  className="h-full first:rounded-l-full last:rounded-r-full"
+                  style={{ width: `${(item.count / total) * 100}%`, backgroundColor: item.color }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <ul className="flex flex-wrap gap-x-5 gap-y-2 border-t border-line/70 px-4 py-3 sm:px-5">
+          {counts.map((item) => (
+            <li key={item.statusKey} className="inline-flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: item.color }} />
+              <span className="font-mono text-[8.5px] uppercase tracking-[0.12em] text-muted">
+                {item.label}
+              </span>
+              <span className="font-mono text-[9px] font-semibold text-ink-soft">{item.count}</span>
+            </li>
+          ))}
+        </ul>
       </div>
+
       <p className="mb-8 text-[11.5px] leading-relaxed text-muted">
         <span className="font-semibold text-ink-soft">How to read this:</span>{' '}
         completed means built and applied in a project; explored means studied and experimented with; in progress is active study;
@@ -706,6 +803,7 @@ function ArchitectureFlow() {
 export function JourneySection() {
   const reduced = useReducedMotion();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [inViewId, setInViewId] = useState<string | null>(roadmapMilestones[0].id);
   const roadmapRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -718,7 +816,7 @@ export function JourneySection() {
     restDelta: 0.001,
   });
 
-  const activeChapter = expandedId;
+  const activeChapter = expandedId ?? inViewId;
 
   // Deep links from project and case-study cards should open the matching milestone.
   useEffect(() => {
@@ -741,6 +839,24 @@ export function JourneySection() {
     window.addEventListener('hashchange', syncFromHash);
     return () => window.removeEventListener('hashchange', syncFromHash);
   }, [reduced]);
+
+  // Keep the chapter rail in sync with the milestone currently being read.
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-milestone]'));
+    if (!nodes.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        const next = visible[0]?.target.getAttribute('data-milestone');
+        if (next) setInViewId(next);
+      },
+      { rootMargin: '-28% 0px -58% 0px', threshold: 0 }
+    );
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
 
   const toggleExpand = useCallback((id: string) => {
     setExpandedId((previous) => (previous === id ? null : id));
@@ -785,6 +901,7 @@ export function JourneySection() {
                 index={index}
                 isExpanded={expandedId === milestone.id}
                 onToggle={() => toggleExpand(milestone.id)}
+                onJump={jumpTo}
               />
             </React.Fragment>
           ))}

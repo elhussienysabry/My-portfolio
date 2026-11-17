@@ -172,6 +172,42 @@
     background-size: 56px 56px;
   }
 
+  .bg-grid-dark {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .bg-signal-grid {
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.09) 1px, transparent 1.4px);
+    background-size: 22px 22px;
+  }
+
+  .stack-marquee {
+    animation: marquee 68s linear infinite;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .stack-marquee:hover,
+  .stack-marquee:focus-within {
+    animation-play-state: paused;
+  }
+
+  .stack-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 44px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 44px), transparent 100%);
+  }
+
+  @media (min-width: 640px) {
+    .stack-mask {
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 92px, #000 calc(100% - 100px), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, #000 92px, #000 calc(100% - 100px), transparent 100%);
+    }
+  }
+
   .bg-stripes {
     background-image: repeating-linear-gradient(
       -45deg,
@@ -272,10 +308,10 @@
 
 @keyframes marquee {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -341,7 +377,8 @@
   .animate-float-delayed,
   .animate-blob,
   .animate-marquee,
-  .animate-shine {
+  .animate-shine,
+  .stack-marquee {
     animation: none !important;
   }
 }
