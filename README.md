@@ -141,12 +141,12 @@ or external services:
 
 ### GitHub Pages
 
-The site deploys automatically to **https://elhussienysabry.github.io/** through
+The site deploys automatically to **https://elhussieny.site/** (custom domain backed by `elhussienysabry.github.io`) through
 `.github/workflows/deploy-pages.yml`.
 
 - Pushes to `master` build the site and publish `dist` with GitHub's Pages actions.
-- Pages must use **Settings → Pages → Source: GitHub Actions** (the workflow is the only publisher).
-- The user-site repository `elhussienysabry.github.io` serves directly from root `/`.
+- Pages uses **Settings → Pages → Source: GitHub Actions** with custom domain `elhussieny.site`.
+- The `public/CNAME` file ensures the custom domain configuration persists across workflow runs.
 - `import.meta.env.BASE_URL` resolves the CV, avatar, certificate image, and social preview image.
 - To deploy manually: **Actions → Deploy to GitHub Pages → Run workflow**.
 
