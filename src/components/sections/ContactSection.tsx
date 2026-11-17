@@ -143,7 +143,7 @@ export function ContactSection() {
 
               <div className="flex items-center gap-2 rounded-2xl border border-accent-yellow/20 bg-accent-yellow/[0.07] px-4 py-3 text-[11px] text-white/60">
                 <Sparkles size={14} className="shrink-0 text-accent-yellow" />
-                Currently looking for a data engineering internship.
+                Currently looking for a data engineering opportunities.
               </div>
             </div>
           </div>

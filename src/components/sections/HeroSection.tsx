@@ -230,7 +230,7 @@ export function HeroSection() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-green opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-green" />
                 </span>
-                Available for internships
+                Available for opportunities
               </span>
               <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
                 {siteConfig.name}
