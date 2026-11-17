@@ -141,17 +141,14 @@ or external services:
 
 ### GitHub Pages
 
-The site deploys automatically to **https://elhussienysabry.github.io/My-portfolio/** through
+The site deploys automatically to **https://elhussienysabry.github.io/** through
 `.github/workflows/deploy-pages.yml`.
 
 - Pushes to `master` build the site and publish `dist` with GitHub's Pages actions.
 - Pages must use **Settings → Pages → Source: GitHub Actions** (the workflow is the only publisher).
-- The build runs with `GITHUB_PAGES=true`, which sets Vite's `base` to `/My-portfolio/`.
-- `import.meta.env.BASE_URL` resolves the CV, avatar, certificate image, and social preview image,
-  so assets keep working under the project-site subpath.
+- The user-site repository `elhussienysabry.github.io` serves directly from root `/`.
+- `import.meta.env.BASE_URL` resolves the CV, avatar, certificate image, and social preview image.
 - To deploy manually: **Actions → Deploy to GitHub Pages → Run workflow**.
-
-Local development and preview stay at `/` because the base path is only applied in CI.
 
 ### Vercel
 

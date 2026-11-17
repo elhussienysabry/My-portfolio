@@ -4,8 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
 export default defineConfig({
-  // Project GitHub Pages site lives at /My-portfolio/; local dev/preview stays at /.
-  base: process.env.GITHUB_PAGES === 'true' ? '/My-portfolio/' : '/',
+  // User GitHub Pages site (elhussienysabry.github.io) is served from the root /.
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
