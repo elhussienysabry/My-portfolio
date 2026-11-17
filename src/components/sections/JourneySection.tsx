@@ -113,7 +113,7 @@ function TimelinePath({
 function ConnectionBadge({ label, dark = false }: { label: string; dark?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-medium ${
+      className={`inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1 text-[10px] font-medium ${
         dark
           ? 'border-white/10 bg-white/[0.05] text-white/65'
           : 'border-accent-blue/20 bg-accent-blue/[0.06] text-accent-blue'
@@ -271,23 +271,23 @@ function MilestoneCard({ milestone, index, isExpanded, onToggle }: {
 
               {/* Expand toggle */}
               {(milestone.learningObjectives || milestone.businessRelevance || milestone.useCases || milestone.evidence) && (
-                <button
-                  type="button"
-                  onClick={onToggle}
-                  className={`mt-4 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
-                    isLeft ? 'lg:ml-auto' : ''
-                  } ${
-                    isFuture
-                      ? 'border-white/15 text-white/80 hover:bg-white/[0.06]'
-                      : 'border-transparent hover:border-line-strong/60 hover:bg-paper/70'
-                  }`}
-                  style={{ color: isFuture ? milestone.color : undefined }}
-                  aria-expanded={isExpanded}
-                  aria-controls={detailsId}
-                >
-                  {isExpanded ? 'Show less' : 'Explore details'}
-                  {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                </button>
+                <div className={`mt-4 flex ${isLeft ? 'lg:justify-end' : ''}`}>
+                  <button
+                    type="button"
+                    onClick={onToggle}
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                      isFuture
+                        ? 'border-white/15 text-white/80 hover:bg-white/[0.06]'
+                        : 'border-transparent hover:border-line-strong/60 hover:bg-paper/70'
+                    }`}
+                    style={{ color: isFuture ? milestone.color : undefined }}
+                    aria-expanded={isExpanded}
+                    aria-controls={detailsId}
+                  >
+                    {isExpanded ? 'Show less' : 'Explore details'}
+                    {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                  </button>
+                </div>
               )}
 
               {/* Expanded details */}
@@ -699,8 +699,7 @@ export function JourneySection() {
     restDelta: 0.001,
   });
 
-  const currentMilestone = roadmapMilestones.find((milestone) => milestone.status === 'current');
-  const activeChapter = expandedId ?? currentMilestone?.id ?? null;
+  const activeChapter = expandedId;
 
   const toggleExpand = useCallback((id: string) => {
     setExpandedId((previous) => (previous === id ? null : id));
