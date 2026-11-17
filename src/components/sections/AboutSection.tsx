@@ -144,7 +144,7 @@ export function AboutSection() {
                 <Rocket size={14} className="text-accent-cyan" />
                 <span className="text-[11px] font-semibold text-ink">Next on the roadmap</span>
               </div>
-              <p className="mt-1 text-[11px] text-muted">Apache Kafka · Cloud Storage</p>
+              <p className="mt-1 text-[11px] text-muted">Apache Kafka · Cloud Storage · Databricks Lakehouse</p>
             </div>
             <a
               href="#contact"

@@ -17,6 +17,7 @@ const iconMap: Record<string, React.ElementType> = {
   code: Code, database: Database, 'arrow-right-left': ArrowRightLeft,
   'hard-drive': HardDrive, cpu: Cpu, workflow: Workflow,
   'book-open': BookOpen, radio: Radio, cloud: Cloud,
+  layers: Layers,
 };
 
 /** Darker variants keep small accent labels readable on the light canvas. */
@@ -29,6 +30,7 @@ const readableAccent: Record<string, string> = {
   '#e3ac1f': '#8a6200',
   '#00a6c4': '#007e95',
   '#9a7bff': '#5a3fe0',
+  '#ff3621': '#c22712',
 };
 
 /* ── Status configuration ── */
@@ -755,7 +757,7 @@ function ArchitectureFlow() {
         </div>
 
         {/* Architecture examples */}
-        <div className="mt-6 grid gap-2 sm:grid-cols-2">
+        <div className="mt-6 grid gap-2 sm:grid-cols-3">
           {[
             {
               title: 'Batch lakehouse',
@@ -765,9 +767,15 @@ function ArchitectureFlow() {
             },
             {
               title: 'Real-time streaming',
-              flow: 'Kafka → Spark Structured Streaming → Cloud Storage',
+              flow: 'Kafka → Spark Streaming → Cloud Storage',
               status: 'planned',
               color: '#00a6c4',
+            },
+            {
+              title: 'Unified Lakehouse (Databricks)',
+              flow: 'Bronze (Raw) → Silver (Clean) → Gold (Unity Catalog)',
+              status: 'planned',
+              color: '#ff3621',
             },
           ].map((architecture) => (
             <div
@@ -783,8 +791,8 @@ function ArchitectureFlow() {
                 <span
                   className="rounded-full px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider"
                   style={{
-                    backgroundColor: architecture.status === 'built' ? 'rgba(10,125,92,0.1)' : 'rgba(0,166,196,0.1)',
-                    color: architecture.status === 'built' ? '#086a4f' : '#007e95',
+                    backgroundColor: architecture.status === 'built' ? 'rgba(10,125,92,0.1)' : `${architecture.color}15`,
+                    color: architecture.status === 'built' ? '#086a4f' : architecture.color,
                   }}
                 >
                   {architecture.status}

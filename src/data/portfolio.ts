@@ -459,6 +459,14 @@ export const skillEcosystemRoles: Record<string, { role: string; layer: string; 
   'Concurrency Control': { role: 'Multi-Version Concurrency Control (MVCC), transaction isolation, and locking protocols', layer: 'Transaction Management' },
   'Apache Kafka': { role: 'Distributed pub/sub event streaming with partitioned logs and consumer rebalancing', layer: 'Real-Time Streaming (Future Goal)' },
   'Cloud Storage': { role: 'Object storage (S3/GCS/Blob) with lifecycle policies, tiering, and data lakes', layer: 'Cloud Infrastructure (Future Goal)' },
+  Databricks: { role: 'Unified lakehouse platform uniting data engineering, streaming, governance, and analytics on Apache Spark', layer: 'Unified Platform (Future Goal)' },
+  'Delta Lake': { role: 'Open storage framework providing ACID transactions, time travel, and metadata indexing on object stores', layer: 'Lakehouse Storage (Future Goal)' },
+  'Unity Catalog': { role: 'Centralized governance solution for data, files, models, and dashboards with unified audit logs and lineage', layer: 'Data Governance (Future Goal)' },
+  'Delta Live Tables': { role: 'Declarative framework for building reliable, maintainable, and testable data processing pipelines in Databricks', layer: 'Pipeline Framework (Future Goal)' },
+  'Medallion Architecture': { role: 'Multi-layer data design pattern (Bronze → Silver → Gold) ensuring data quality and progressive refinement', layer: 'Architectural Pattern (Future Goal)' },
+  Snowflake: { role: 'Cloud-native data cloud supporting decoupled compute, Snowpark, Dynamic Tables, and Apache Iceberg tables', layer: 'Unified Data Cloud (Ecosystem Comparison)' },
+  'Microsoft Fabric': { role: 'All-in-one analytics platform centered around OneLake and native Delta format for cross-engine interoperability', layer: 'Unified Platform (Ecosystem Comparison)' },
+  'Apache Iceberg': { role: 'High-performance open table format for huge analytic datasets with schema evolution and hidden partitioning', layer: 'Open Table Format (Ecosystem Comparison)' },
 };
 
 /** @deprecated Use roadmapMilestones instead — kept for backward compat */
@@ -574,6 +582,7 @@ export const roadmapMilestones: RoadmapMilestone[] = [
     connections: [
       { targetId: 'big-data', label: 'Hadoop → Spark: next-gen memory-speed compute' },
       { targetId: 'kafka', label: 'Apache Spark + Apache Kafka → Real-Time Stream Processing' },
+      { targetId: 'unified-platforms', label: 'Apache Spark → Core engine behind Databricks & Delta Lake' },
     ],
   },
   {
@@ -653,6 +662,7 @@ export const roadmapMilestones: RoadmapMilestone[] = [
       { targetId: 'spark', label: 'Apache Spark + Apache Kafka → Real-Time Stream Processing' },
       { targetId: 'orchestration', label: 'Airflow + Kafka → Orchestrated streaming' },
       { targetId: 'cloud-storage', label: 'Kafka → Cloud Storage → Scalable Data Lake' },
+      { targetId: 'unified-platforms', label: 'Kafka → Real-Time Lakehouse Streaming (Bronze Ingestion)' },
     ],
   },
   {
@@ -688,6 +698,52 @@ export const roadmapMilestones: RoadmapMilestone[] = [
     connections: [
       { targetId: 'kafka', label: 'Kafka → Cloud Storage → Scalable Data Lake' },
       { targetId: 'spark', label: 'Cloud Storage + Parquet + Spark → Scalable Data Lake Architecture' },
+      { targetId: 'unified-platforms', label: 'Cloud Storage (S3/ADLS/GCS) → Unified Lakehouse Storage' },
+    ],
+  },
+  {
+    id: 'unified-platforms',
+    phase: 'Lakehouse',
+    title: 'Unified Data Platforms & Lakehouse Architecture',
+    description:
+      'Master modern unified lakehouse platforms with Databricks as the primary engine — uniting data engineering, streaming, and governance on open formats. Study Medallion Architecture, Delta Lake ACID transaction logs, Unity Catalog, Delta Live Tables (DLT), and comparative architectures across Snowflake and Microsoft Fabric.',
+    skills: [
+      'Databricks',
+      'Delta Lake',
+      'Unity Catalog',
+      'Delta Live Tables',
+      'Medallion Architecture',
+      'Snowflake',
+      'Microsoft Fabric',
+      'Apache Iceberg',
+    ],
+    icon: 'layers',
+    color: '#ff3621',
+    status: 'planned',
+    learningObjectives: [
+      'Lakehouse Architectural Paradigm: Merging the low cost and open flexibility of data lakes with the ACID transactions, schema enforcement, and sub-second BI query speed of enterprise warehouses.',
+      'Databricks Core Platform Architecture: Managed Spark clusters, Serverless SQL warehouses, workspace orchestration, and the Photon C++ vectorized query execution engine.',
+      'Medallion Architecture Implementation: Engineering reliable Bronze (raw immutable append-only), Silver (cleansed, deduplicated, enriched), and Gold (aggregated business marts & feature stores) data tiers.',
+      'Delta Lake Storage Internals: Atomic commit protocols via the _delta_log JSON transaction log, parquet file layout, ACID isolation, schema evolution, time travel (historical rollbacks), OPTIMIZE compaction, and Liquid Clustering.',
+      'Declarative ETL with Delta Live Tables (DLT): Authoring declarative streaming and batch pipelines with built-in expectation gates (WARN, DROP, FAIL) and automatic infrastructure scaling.',
+      'Centralized Governance with Unity Catalog: Three-level namespace (catalog.schema.table), unified access control (RBAC & ABAC), audit logging, and automated end-to-end data lineage across multi-cloud environments.',
+      'Comparative Unified Platforms: Analyzing Snowflake (virtual warehouses, decoupled storage, Snowpark Python, Dynamic Tables, Iceberg integration) and Microsoft Fabric (OneLake SaaS lakehouse, Synapse Spark, Direct Lake mode).',
+      'Open Table Formats Interoperability: Architectural trade-offs between Delta Lake, Apache Iceberg, and Apache Hudi (metadata snapshot tracking, hidden partitioning, file compaction, and multi-engine read/write).',
+    ],
+    businessRelevance:
+      'Unified lakehouse platforms eliminate the costly and fragile dual-system anti-pattern of copying raw data from storage lakes into separate proprietary warehouses. By providing a single governance layer (Unity Catalog), ACID reliability on open formats, and unified batch/streaming compute, platforms like Databricks slash infrastructure overhead, prevent data drift, and accelerate reliable enterprise analytics.',
+    useCases: [
+      'Enterprise Medallion Lakehouse deployments (Bronze → Silver → Gold)',
+      'Unified enterprise data governance, compliance auditing, and lineage via Unity Catalog',
+      'Automated declarative ingestion pipelines with Delta Live Tables and quality expectations',
+      'High-performance BI and analytical querying over open Delta Lake and Apache Iceberg tables',
+      'Multi-cloud data mesh architecture bridging Databricks, Snowflake, and Microsoft Fabric',
+    ],
+    connections: [
+      { targetId: 'spark', label: 'Apache Spark → Core distributed compute engine behind Databricks & Delta' },
+      { targetId: 'cloud-storage', label: 'Cloud Storage (S3/ADLS/GCS) → Scalable Lakehouse object storage tier' },
+      { targetId: 'kafka', label: 'Apache Kafka → Continuous real-time streaming into Delta Lake Bronze layer' },
+      { targetId: 'etl-engineering', label: 'dbt / ETL → Medallion curation modeled into Gold analytics marts' },
     ],
   },
 ];

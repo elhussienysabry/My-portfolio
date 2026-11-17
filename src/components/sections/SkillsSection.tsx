@@ -185,7 +185,7 @@ export function SkillsSection() {
         <div className="mt-6 flex flex-col items-start justify-between gap-3 rounded-2xl border border-line bg-cream/60 px-5 py-4 sm:flex-row sm:items-center">
           <p className="flex items-center gap-2 text-sm text-ink-soft">
             <Sparkles size={15} className="text-accent-yellow" />
-            Currently going deeper into distributed systems and database internals — with Kafka and cloud storage on the roadmap.
+            Currently going deeper into distributed systems and database internals — with Kafka, cloud storage, and unified lakehouses (Databricks) on the roadmap.
           </p>
           <a href="#journey" className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-blue hover:text-accent-purple">
             See the full roadmap
