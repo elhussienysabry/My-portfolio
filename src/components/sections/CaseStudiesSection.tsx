@@ -16,6 +16,15 @@ const iconMap: Record<string, React.ElementType> = {
   server: Server,
 };
 
+const studyRoadmapLink: Record<string, { label: string; id: string }> = {
+  'data-pipeline': { label: 'Connects to: ETL / ELT & Pipeline Architecture', id: 'etl-engineering' },
+  'database-indexing': { label: 'Connects to: SQL & Database Systems', id: 'sql-databases' },
+  'spark-execution': { label: 'Connects to: Apache Spark & Distributed Computing', id: 'spark' },
+  'airflow-architecture': { label: 'Connects to: Workflow Orchestration with Airflow', id: 'orchestration' },
+  'schema-evolution': { label: 'Connects to: ETL & Data Quality Gates', id: 'etl-engineering' },
+  'distributed-processing': { label: 'Connects to: Database Internals & Distributed Systems', id: 'systems' },
+};
+
 function CaseStudyCard({ study, index }: { study: typeof caseStudies[0]; index: number }) {
   const [expanded, setExpanded] = useState(false);
   const IconComp = iconMap[study.icon] || Server;
@@ -66,6 +75,18 @@ function CaseStudyCard({ study, index }: { study: typeof caseStudies[0]; index: 
                     <Badge key={concept} color={study.color}>{concept}</Badge>
                   ))}
                 </div>
+
+                {studyRoadmapLink[study.id] && (
+                  <div className="mt-3.5 pt-3 border-t border-line/60">
+                    <a
+                      href={`#milestone-${studyRoadmapLink[study.id].id}`}
+                      className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold text-accent-blue transition-colors hover:text-accent-purple"
+                    >
+                      <span>{studyRoadmapLink[study.id].label}</span>
+                      <span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}

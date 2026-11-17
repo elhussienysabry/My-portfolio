@@ -95,6 +95,7 @@
   }
 
   html {
+    position: relative;
     scroll-behavior: smooth;
     background-color: var(--color-paper);
     color: var(--color-ink);
@@ -242,6 +243,33 @@
 
   .animate-pop {
     animation: pop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Roadmap future milestone cards */
+  .roadmap-future-card {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent 0,
+      transparent 8px,
+      rgba(154, 123, 255, 0.025) 8px,
+      rgba(154, 123, 255, 0.025) 9px
+    );
+  }
+
+  /* Section storytelling connectors */
+  .section-connector {
+    position: relative;
+  }
+
+  .section-connector::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -1rem;
+    width: 1px;
+    height: 2rem;
+    background: linear-gradient(to bottom, transparent, var(--color-line-strong), transparent);
+    transform: translateX(-50%);
   }
 }
 

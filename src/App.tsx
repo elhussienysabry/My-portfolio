@@ -21,17 +21,17 @@ export default function App() {
         <HeroSection />
         <SectionDivider />
         <AboutSection />
-        <SectionDivider />
+        <SectionDivider insight="From understanding systems to building with them." />
         <SkillsSection />
-        <SectionDivider />
+        <SectionDivider insight="These tools power the projects below." />
         <ProjectsSection />
         <SectionDivider />
         <CaseStudiesSection />
-        <SectionDivider />
+        <SectionDivider insight="Theory meets practice through open-source contribution." />
         <CertificationsSection />
         <SectionDivider />
         <OpenSourceSection />
-        <SectionDivider />
+        <SectionDivider insight="Every technology learned opens the path to the next." />
         <JourneySection />
         <SectionDivider />
         <GameSection />

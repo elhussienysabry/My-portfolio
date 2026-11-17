@@ -166,17 +166,24 @@ export function Badge({
   );
 }
 
-export function SectionDivider() {
+export function SectionDivider({ insight }: { insight?: string }) {
   return (
     <div aria-hidden="true" className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
-      <div className="flex items-center gap-2.5 py-1">
-        <span className="h-px flex-1 bg-gradient-to-r from-transparent via-line-strong to-line-strong/40" />
-        <span className="h-1.5 w-1.5 rounded-full bg-accent-blue" />
-        <span className="h-1.5 w-1.5 rounded-full bg-accent-purple" />
-        <span className="h-1.5 w-1.5 rounded-full bg-accent-coral" />
-        <span className="h-1.5 w-1.5 rounded-full bg-accent-orange" />
-        <span className="h-1.5 w-1.5 rounded-full bg-accent-green" />
-        <span className="h-px flex-1 bg-gradient-to-l from-transparent via-line-strong to-line-strong/40" />
+      <div className="flex flex-col items-center gap-2 py-1">
+        <div className="flex w-full items-center gap-2.5">
+          <span className="h-px flex-1 bg-gradient-to-r from-transparent via-line-strong to-line-strong/40" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-blue" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-purple" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-coral" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-orange" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-green" />
+          <span className="h-px flex-1 bg-gradient-to-l from-transparent via-line-strong to-line-strong/40" />
+        </div>
+        {insight && (
+          <p className="max-w-md text-center font-serif text-[13px] italic leading-relaxed text-muted">
+            {insight}
+          </p>
+        )}
       </div>
     </div>
   );

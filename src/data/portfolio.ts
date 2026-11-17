@@ -410,6 +410,58 @@ export const certifications: Certification[] = [
   },
 ];
 
+export type RoadmapStatus = 'completed' | 'explored' | 'current' | 'next' | 'planned';
+
+export interface RoadmapMilestone {
+  id: string;
+  phase: string;
+  title: string;
+  description: string;
+  skills: string[];
+  icon: string;
+  color: string;
+  status: RoadmapStatus;
+  evidence?: string;
+  learningObjectives?: string[];
+  businessRelevance?: string;
+  useCases?: string[];
+  connections?: { targetId: string; label: string }[];
+}
+
+export const skillEcosystemRoles: Record<string, { role: string; layer: string; relatedProject?: string }> = {
+  Python: { role: 'General-purpose data manipulation, ETL scripting, and pipeline automation', layer: 'Compute & Scripting', relatedProject: 'retailflow-pipeline' },
+  SQL: { role: 'Declarative data extraction, relational transformations, and analytical aggregations', layer: 'Query Engine', relatedProject: 'salespulse' },
+  'ETL/ELT': { role: 'Extraction, transformation, and idempotent loading across lakehouse architectures', layer: 'Pipeline Pattern', relatedProject: 'retailflow-pipeline' },
+  'Data Pipelines': { role: 'Automated, observable DAG execution with circuit breakers and schema verification', layer: 'Architecture', relatedProject: 'retailflow-pipeline' },
+  'Data Quality': { role: 'Automated schema validation, anomaly detection, null tests, and SLA thresholds', layer: 'Governance', relatedProject: 'retailflow-pipeline' },
+  'Apache Spark': { role: 'Distributed in-memory computation, Catalyst optimization, and shuffle execution', layer: 'Distributed Compute', relatedProject: 'spark-docker' },
+  Hadoop: { role: 'Foundational distributed storage (HDFS) and compute resource allocation (YARN)', layer: 'Big Data Ecosystem' },
+  HDFS: { role: 'Distributed block-level storage with multi-node replication and fault tolerance', layer: 'Storage Engine' },
+  YARN: { role: 'Cluster resource negotiation and multi-tenant job scheduling at scale', layer: 'Cluster Management' },
+  MapReduce: { role: 'Batch two-stage distributed computation paradigm for large datasets', layer: 'Processing Model' },
+  'Apache Airflow': { role: 'Programmatic DAG orchestration, scheduler state machines, and task retries', layer: 'Orchestration' },
+  PostgreSQL: { role: 'ACID-compliant relational database with advanced indexing and query optimization', layer: 'Relational Store', relatedProject: 'retailflow-pipeline' },
+  DuckDB: { role: 'Embedded columnar analytical OLAP engine with zero-copy vectorized execution', layer: 'Analytical Engine', relatedProject: 'retailflow-pipeline' },
+  SQLite: { role: 'Serverless relational database for deterministic analytical queries and testing', layer: 'Embedded Database', relatedProject: 'salespulse' },
+  Parquet: { role: 'Columnar storage format with snappy compression, dictionary encoding, and statistics', layer: 'Storage Format', relatedProject: 'retailflow-pipeline' },
+  dbt: { role: 'Version-controlled SQL transformations, automated data testing, and lineage graphs', layer: 'Data Modeling', relatedProject: 'retailflow-pipeline' },
+  Pandas: { role: 'DataFrame manipulation, time series analysis, and structured file munging', layer: 'Data Analysis', relatedProject: 'mergemate' },
+  Streamlit: { role: 'Interactive analytical dashboards and real-time operational telemetry monitoring', layer: 'Visualization', relatedProject: 'retailflow-pipeline' },
+  Plotly: { role: 'Interactive charting engine for multi-dimensional business KPI exploratory dashboards', layer: 'Visualization', relatedProject: 'salespulse' },
+  Docker: { role: 'Containerized environments for isolated reproducible local clusters and microservices', layer: 'Infrastructure', relatedProject: 'spark-docker' },
+  Git: { role: 'Distributed version control and collaboration for infrastructure and pipeline code', layer: 'Developer Tooling' },
+  GitHub: { role: 'CI/CD pipeline automation, automated testing, and open-source contribution', layer: 'Developer Tooling' },
+  Linux: { role: 'Kernel-level process management, cron jobs, file systems, and bash scripting', layer: 'Operating System' },
+  'Database Internals': { role: 'Deep study of storage pages, write-ahead logs (WAL), and query planner execution', layer: 'Core Systems' },
+  'Distributed Systems': { role: 'Consensus protocols (Raft/Paxos), partition tolerance, and network fault models', layer: 'Core Systems' },
+  'Storage Engines': { role: 'B-Tree vs. LSM-Tree trade-offs for write-heavy vs. read-heavy data workloads', layer: 'Core Systems' },
+  Indexing: { role: 'B-Trees, Hash indexes, and composite covering indexes for logarithmic query lookups', layer: 'Database Architecture' },
+  'Concurrency Control': { role: 'Multi-Version Concurrency Control (MVCC), transaction isolation, and locking protocols', layer: 'Transaction Management' },
+  'Apache Kafka': { role: 'Distributed pub/sub event streaming with partitioned logs and consumer rebalancing', layer: 'Real-Time Streaming (Future Goal)' },
+  'Cloud Storage': { role: 'Object storage (S3/GCS/Blob) with lifecycle policies, tiering, and data lakes', layer: 'Cloud Infrastructure (Future Goal)' },
+};
+
+/** @deprecated Use roadmapMilestones instead — kept for backward compat */
 export interface TimelineEntry {
   id: string;
   phase: string;
@@ -420,7 +472,7 @@ export interface TimelineEntry {
   color: string;
 }
 
-export const learningTimeline: TimelineEntry[] = [
+export const roadmapMilestones: RoadmapMilestone[] = [
   {
     id: 'fundamentals',
     phase: 'Foundation',
@@ -429,6 +481,16 @@ export const learningTimeline: TimelineEntry[] = [
     skills: ['Python', 'Data Structures', 'Algorithmic Thinking'],
     icon: 'code',
     color: '#2f55ff',
+    status: 'completed',
+    evidence: 'Applied in every pipeline and project on this site — from ingestion scripts to reusable validation utilities.',
+    learningObjectives: [
+      'Core Python programming and OOP design principles',
+      'Data structures and algorithmic complexity (Big-O analysis)',
+      'Clean code architecture, modular packaging, and unit testing patterns',
+    ],
+    businessRelevance: 'Programming fundamentals form the base layer for every data system — from scripting ETL logic to authoring reusable framework code.',
+    useCases: ['ETL scripting', 'Data validation logic', 'Automation utilities'],
+    connections: [{ targetId: 'sql-databases', label: 'Python + SQL → Foundation for Data Engineering' }],
   },
   {
     id: 'sql-databases',
@@ -438,6 +500,17 @@ export const learningTimeline: TimelineEntry[] = [
     skills: ['SQL', 'PostgreSQL', 'SQLite', 'Relational Design'],
     icon: 'database',
     color: '#7357ff',
+    status: 'completed',
+    evidence: 'Relational modeling and analytical SQL used in the RetailFlow and SalesPulse projects.',
+    learningObjectives: [
+      'Relational modeling and normalization',
+      'Complex analytical SQL queries',
+      'Index design and query plan analysis',
+      'Transaction isolation and integrity',
+    ],
+    businessRelevance: 'SQL is the universal language of analytical workloads. Understanding how databases execute queries is critical to building performant data systems.',
+    useCases: ['Analytical reporting', 'Data warehousing', 'Application backends'],
+    connections: [{ targetId: 'fundamentals', label: 'Python + SQL → Data pipeline scripting' }],
   },
   {
     id: 'etl-engineering',
@@ -447,15 +520,38 @@ export const learningTimeline: TimelineEntry[] = [
     skills: ['ETL/ELT', 'Data Pipelines', 'Data Quality', 'dbt'],
     icon: 'arrow-right-left',
     color: '#7357ff',
+    status: 'completed',
+    evidence: 'RetailFlow Pipeline — an 11-step ELT build with schema checks, idempotent loads and quality gates.',
+    learningObjectives: [
+      'Multi-source data extraction patterns',
+      'Schema drift detection at ingestion time',
+      'Idempotent load strategies',
+      'dbt transformation modeling and testing',
+      'Data quality circuit breakers',
+    ],
+    businessRelevance: 'Reliable data pipelines are the backbone of analytics. Schema validation and idempotent loading prevent the silent data corruption that breaks downstream reports.',
+    useCases: ['Enterprise data platforms', 'BI and reporting infrastructure', 'Data lake ingestion'],
+    connections: [{ targetId: 'sql-databases', label: 'SQL + ETL → Warehouse loading' }],
   },
   {
     id: 'big-data',
     phase: 'Big Data',
-    title: 'Big Data Ecosystem',
+    title: 'Hadoop Ecosystem',
     description: 'Explored distributed file systems and resource orchestration: HDFS for block storage, YARN for cluster management, and MapReduce paradigms for batch processing execution.',
     skills: ['Hadoop', 'HDFS', 'YARN', 'MapReduce'],
     icon: 'hard-drive',
     color: '#0b9e73',
+    status: 'explored',
+    evidence: 'Studied HDFS block storage, YARN scheduling and MapReduce — concepts explored, not run as a production cluster.',
+    learningObjectives: [
+      'HDFS block storage architecture',
+      'YARN resource management',
+      'MapReduce execution model',
+      'Data locality and rack awareness',
+    ],
+    businessRelevance: 'The Hadoop ecosystem introduced the distributed storage and processing paradigms that power modern big data infrastructure.',
+    useCases: ['Batch data processing', 'Distributed storage', 'Cluster resource management'],
+    connections: [{ targetId: 'etl-engineering', label: 'ETL at scale → Distributed processing' }],
   },
   {
     id: 'spark',
@@ -465,6 +561,20 @@ export const learningTimeline: TimelineEntry[] = [
     skills: ['Apache Spark', 'PySpark', 'Docker', 'Distributed Systems'],
     icon: 'cpu',
     color: '#ff7a2f',
+    status: 'completed',
+    evidence: 'Spark-Docker Lab — a working standalone cluster with DAG, shuffle and Catalyst optimization exercises.',
+    learningObjectives: [
+      'Spark execution architecture (DAGs, Stages, Tasks)',
+      'Shuffle mechanics and partition tuning',
+      'Catalyst optimizer and query planning',
+      'Docker-based cluster deployment',
+    ],
+    businessRelevance: 'Spark is the dominant engine for large-scale data processing, enabling batch and streaming workloads with unified APIs.',
+    useCases: ['Large-scale data transformations', 'Machine learning pipelines', 'Streaming analytics'],
+    connections: [
+      { targetId: 'big-data', label: 'Hadoop → Spark: next-gen memory-speed compute' },
+      { targetId: 'kafka', label: 'Apache Spark + Apache Kafka → Real-Time Stream Processing' },
+    ],
   },
   {
     id: 'orchestration',
@@ -474,6 +584,20 @@ export const learningTimeline: TimelineEntry[] = [
     skills: ['Apache Airflow', 'DAGs', 'Task Lifecycle', 'Observability'],
     icon: 'workflow',
     color: '#e8478c',
+    status: 'explored',
+    evidence: 'Studied scheduler and executor architecture, and contributed a docs + regression test to Apache Airflow (PR #75453).',
+    learningObjectives: [
+      'DAG design and dependency modeling',
+      'Scheduler internals and heartbeat loops',
+      'Executor architectures (Local, Celery, Kubernetes)',
+      'Backfill, retry, and SLA monitoring',
+    ],
+    businessRelevance: 'Orchestration is what transforms individual scripts into observable, retryable, production-grade workflows.',
+    useCases: ['Pipeline scheduling', 'SLA monitoring', 'Cross-system data orchestration'],
+    connections: [
+      { targetId: 'etl-engineering', label: 'Airflow orchestrates ETL pipelines' },
+      { targetId: 'kafka', label: 'Airflow + Kafka → Orchestrated real-time streaming' },
+    ],
   },
   {
     id: 'systems',
@@ -483,8 +607,101 @@ export const learningTimeline: TimelineEntry[] = [
     skills: ['Storage Engines', 'B-Tree Indexing', 'Concurrency Control', 'Distributed Internals'],
     icon: 'book-open',
     color: '#e3ac1f',
+    status: 'current',
+    evidence: 'Active study — B-Tree/LSM storage, WAL, MVCC and consensus — applied to query and storage decisions in projects.',
+    learningObjectives: [
+      'B-Tree vs. LSM-Tree storage engine trade-offs',
+      'Write-Ahead Logging and crash recovery',
+      'MVCC and transaction isolation',
+      'Distributed consensus (Raft, Paxos)',
+      'CAP theorem and partition tolerance',
+    ],
+    businessRelevance: 'Understanding how systems work internally is what separates troubleshooting from guessing. These fundamentals explain why queries are slow and how data can be lost.',
+    useCases: ['System design decisions', 'Performance debugging', 'Architecture reviews'],
+    connections: [{ targetId: 'sql-databases', label: 'SQL → Deep dive into engine internals' }],
+  },
+  {
+    id: 'kafka',
+    phase: 'Streaming',
+    title: 'Apache Kafka — Distributed Event Streaming',
+    description: 'Learn Apache Kafka as a distributed event streaming platform and understand how it supports real-time data pipelines and event-driven architectures.',
+    skills: ['Apache Kafka', 'Event Streaming', 'Real-Time Pipelines', 'Pub/Sub'],
+    icon: 'radio',
+    color: '#00a6c4',
+    status: 'next',
+    learningObjectives: [
+      'Event Streaming Fundamentals',
+      'Producers and Consumers',
+      'Topics and Partitions',
+      'Brokers and Clusters',
+      'Consumer Groups',
+      'Offsets and Consumer Rebalancing',
+      'Replication and Fault Tolerance',
+      'Delivery Semantics (at-least-once, exactly-once)',
+      'Kafka Architecture and Internals',
+      'Kafka Integration with Apache Spark and Airflow',
+      'Building a Practical Real-Time Data Pipeline',
+    ],
+    businessRelevance: 'Kafka enables real-time event ingestion, decoupled services, scalable data pipelines, and near-real-time analytics — the foundation of modern event-driven data infrastructure.',
+    useCases: [
+      'Real-time event ingestion',
+      'Decoupled microservice communication',
+      'Change Data Capture (CDC)',
+      'Stream processing with Spark Structured Streaming',
+    ],
+    connections: [
+      { targetId: 'spark', label: 'Apache Spark + Apache Kafka → Real-Time Stream Processing' },
+      { targetId: 'orchestration', label: 'Airflow + Kafka → Orchestrated streaming' },
+      { targetId: 'cloud-storage', label: 'Kafka → Cloud Storage → Scalable Data Lake' },
+    ],
+  },
+  {
+    id: 'cloud-storage',
+    phase: 'Cloud',
+    title: 'Cloud Storage & Cloud Data Infrastructure',
+    description: 'Understand cloud-based object storage and how modern data engineering platforms use cloud infrastructure for scalable and cost-effective data storage.',
+    skills: ['Object Storage', 'AWS S3', 'Azure Blob', 'GCS', 'Data Lake Architecture'],
+    icon: 'cloud',
+    color: '#9a7bff',
+    status: 'planned',
+    learningObjectives: [
+      'Object Storage Fundamentals',
+      'Buckets and Objects',
+      'Amazon S3 Concepts',
+      'Azure Blob Storage',
+      'Google Cloud Storage',
+      'Data Lake Architecture',
+      'Parquet and Columnar Storage',
+      'Storage Classes and Lifecycle Policies',
+      'Access Control and IAM Fundamentals',
+      'Data Lake vs Data Warehouse',
+      'Cloud Storage Integration with Spark and Data Pipelines',
+      'Cost, Scalability, Durability, and Performance Trade-offs',
+    ],
+    businessRelevance: 'Cloud storage supports scalable data lakes, analytical workloads, data retention, and cost-efficient storage infrastructure — the modern standard for enterprise data platforms.',
+    useCases: [
+      'Scalable data lake architecture',
+      'Cold/warm/hot storage tiering',
+      'Cross-cloud data portability',
+      'Columnar analytics with Parquet + Spark',
+    ],
+    connections: [
+      { targetId: 'kafka', label: 'Kafka → Cloud Storage → Scalable Data Lake' },
+      { targetId: 'spark', label: 'Cloud Storage + Parquet + Spark → Scalable Data Lake Architecture' },
+    ],
   },
 ];
+
+/** @deprecated Backward compat alias */
+export const learningTimeline: TimelineEntry[] = roadmapMilestones.map((m) => ({
+  id: m.id,
+  phase: m.phase,
+  title: m.title,
+  description: m.description,
+  skills: m.skills,
+  icon: m.icon,
+  color: m.color,
+}));
 
 export const navItems = [
   { label: 'Home', href: '#hero' },
@@ -494,7 +711,7 @@ export const navItems = [
   { label: 'Case Studies', href: '#case-studies' },
   { label: 'Certifications', href: '#certifications' },
   { label: 'Open Source', href: '#open-source' },
-  { label: 'Journey', href: '#journey' },
+  { label: 'Roadmap', href: '#journey' },
   { label: 'Play', href: '#play' },
   { label: 'Contact', href: '#contact' },
 ] as const;

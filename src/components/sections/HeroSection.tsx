@@ -8,20 +8,22 @@ import {
 } from 'lucide-react';
 
 const stages = [
-  { label: 'Source', Icon: Database, color: '#2f55ff' },
-  { label: 'Ingestion', Icon: ArrowDownToLine, color: '#00a6c4' },
-  { label: 'Processing', Icon: Cpu, color: '#7357ff' },
-  { label: 'Storage', Icon: HardDrive, color: '#0b9e73' },
-  { label: 'Analytics', Icon: BarChart3, color: '#ff7a2f' },
+  { label: 'Source', Icon: Database, color: '#2f55ff', note: 'APIs, transactional databases & streaming feeds' },
+  { label: 'Ingestion', Icon: ArrowDownToLine, color: '#00a6c4', note: 'Schema drift detection & idempotent loading' },
+  { label: 'Processing', Icon: Cpu, color: '#7357ff', note: 'Spark distributed DAG transformations & dbt models' },
+  { label: 'Storage', Icon: HardDrive, color: '#0b9e73', note: 'Curated Parquet lakehouse & partitioned marts' },
+  { label: 'Analytics', Icon: BarChart3, color: '#ff7a2f', note: 'KPI reporting, SQL queries & real-time dashboards' },
 ];
 
 const marqueeItems = [
   'Python', 'SQL', 'Apache Airflow', 'Apache Spark', 'dbt',
   'PostgreSQL', 'DuckDB', 'Docker', 'Parquet', 'pytest',
+  'Apache Kafka', 'Cloud Storage',
 ];
 
 function PipelinePreview() {
   const reduced = useReducedMotion();
+  const [selectedStage, setSelectedStage] = React.useState<number | null>(null);
 
   return (
     <div className="relative mx-auto w-full max-w-[30rem] lg:max-w-none">
@@ -42,10 +44,10 @@ function PipelinePreview() {
             <span className="h-2.5 w-2.5 rounded-full bg-accent-yellow" />
             <span className="h-2.5 w-2.5 rounded-full bg-accent-green" />
           </div>
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">pipeline.live</span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">pipeline.architecture</span>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-green/10 px-2 py-1 text-[9px] font-mono font-medium uppercase tracking-wider text-green-ink">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-green" />
-            healthy
+            live data flow
           </span>
         </div>
 
@@ -60,27 +62,49 @@ function PipelinePreview() {
             />
           )}
           <div className="grid grid-cols-5 gap-1">
-            {stages.map(({ label, Icon, color }, i) => (
-              <motion.div
-                key={label}
-                initial={reduced ? false : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.65 + i * 0.09 }}
-                className="flex flex-col items-center gap-2 text-center"
-              >
-                <span
-                  className="grid h-9 w-9 place-items-center rounded-xl border bg-cream shadow-sm sm:h-11 sm:w-11"
-                  style={{ borderColor: `${color}45`, color }}
+            {stages.map(({ label, Icon, color }, i) => {
+              const isSelected = selectedStage === i;
+              return (
+                <motion.button
+                  key={label}
+                  type="button"
+                  onClick={() => setSelectedStage(isSelected ? null : i)}
+                  onMouseEnter={() => setSelectedStage(i)}
+                  initial={reduced ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.65 + i * 0.09 }}
+                  className="flex flex-col items-center gap-2 text-center group cursor-pointer"
                 >
-                  <Icon size={17} strokeWidth={2.1} />
+                  <span
+                    className={`grid h-9 w-9 place-items-center rounded-xl border bg-cream shadow-sm transition-transform group-hover:scale-105 sm:h-11 sm:w-11 ${
+                      isSelected ? 'ring-2 ring-offset-2 ring-accent-blue' : ''
+                    }`}
+                    style={{ borderColor: `${color}45`, color }}
+                  >
+                    <Icon size={17} strokeWidth={2.1} />
+                  </span>
+                  <span className="text-[10px] font-mono font-medium text-ink-soft sm:text-[10.5px]">{label}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* Dynamic Stage Note */}
+          <div className="mt-3 min-h-[1.75rem] rounded-lg bg-paper px-3 py-1.5 text-center">
+            <p className="font-mono text-[10px] text-muted">
+              {selectedStage !== null ? (
+                <span>
+                  <strong className="text-ink">{stages[selectedStage].label}: </strong>
+                  {stages[selectedStage].note}
                 </span>
-                <span className="text-[10px] font-mono font-medium text-ink-soft sm:text-[10.5px]">{label}</span>
-              </motion.div>
-            ))}
+              ) : (
+                'Hover or tap any stage to inspect the engineering pattern'
+              )}
+            </p>
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-3 gap-2">
+        <div className="mt-4 grid grid-cols-3 gap-2">
           {[
             { value: '11', label: 'pipeline steps' },
             { value: '150+', label: 'pytest tests' },
@@ -96,7 +120,7 @@ function PipelinePreview() {
         <div className="mt-3 flex items-center gap-2 rounded-xl bg-ink px-3 py-2.5 font-mono text-[10px] text-white/70">
           <CheckCircle2 size={13} className="shrink-0 text-accent-green" />
           <span className="truncate">
-            <span className="text-accent-cyan">status</span>: &quot;all checks passed&quot;
+            <span className="text-accent-cyan">status</span>: &quot;all checks passed — automated circuit breakers active&quot;
           </span>
           <span className="ml-auto hidden text-white/35 sm:inline">0.4s</span>
         </div>

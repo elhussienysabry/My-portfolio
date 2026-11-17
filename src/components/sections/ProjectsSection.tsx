@@ -22,6 +22,14 @@ const categoryLabels: Record<string, string> = {
   learning: 'Learning',
 };
 
+const projectRoadmapMap: Record<string, { phase: string; label: string; targetId: string }> = {
+  'retailflow-pipeline': { phase: 'ETL / ELT', label: 'Validates: ETL & Lakehouse Architecture', targetId: 'etl-engineering' },
+  'spark-docker': { phase: 'Apache Spark', label: 'Validates: Spark Internals & Clusters', targetId: 'spark' },
+  'salespulse': { phase: 'Databases', label: 'Validates: SQL & Analytical Stores', targetId: 'sql-databases' },
+  'mergemate': { phase: 'Foundation', label: 'Validates: Data Quality & Automation', targetId: 'fundamentals' },
+  'termchat': { phase: 'Systems', label: 'Validates: Networking & Concurrency', targetId: 'systems' },
+};
+
 const artStyles: Record<string, { from: string; to: string; accent: string; soft: string }> = {
   'data-engineering': { from: '#e9edff', to: '#dfe5ff', accent: '#2f55ff', soft: '#b9c5ff' },
   analytics: { from: '#e4f8ef', to: '#d6f2e5', accent: '#0b9e73', soft: '#9bdec5' },
@@ -163,6 +171,22 @@ function ProjectCard({ project, index, large, onClick }: { project: Project; ind
           </div>
         </div>
 
+        {projectRoadmapMap[project.id] && (
+          <div className="mt-3">
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[9.5px] font-medium"
+              style={{
+                borderColor: `${color}35`,
+                backgroundColor: `${color}0a`,
+                color,
+              }}
+            >
+              <Sparkles size={10} className="shrink-0" />
+              {projectRoadmapMap[project.id].label}
+            </span>
+          </div>
+        )}
+
         <p className={`mt-4 text-sm leading-relaxed text-ink-soft ${large ? 'max-w-xl' : ''}`}>
           {project.description}
         </p>
@@ -274,6 +298,34 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
               ))}
             </div>
           </div>
+
+          {projectRoadmapMap[project.id] && (
+            <div
+              className="rounded-xl border p-3.5"
+              style={{
+                borderColor: `${color}30`,
+                backgroundColor: `${color}06`,
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-ink">
+                  Learning Roadmap Connection
+                </span>
+                <a
+                  href={`#milestone-${projectRoadmapMap[project.id].targetId}`}
+                  onClick={onClose}
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold transition-colors hover:underline"
+                  style={{ color }}
+                >
+                  View roadmap milestone
+                  <ArrowUpRight size={12} />
+                </a>
+              </div>
+              <p className="mt-1 text-xs text-ink-soft">
+                {projectRoadmapMap[project.id].label}
+              </p>
+            </div>
+          )}
 
           <div>
             <h3 className="flex items-center gap-2 font-display text-lg font-bold text-ink">
