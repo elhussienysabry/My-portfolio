@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Check, Play, Pause, Sparkles, ArrowRight, Activity, RotateCcw } from 'lucide-react';
+import { Check, Play, Pause, Sparkles, ArrowRight, Activity } from 'lucide-react';
 
-// Custom precision SVG icons matching the reference image
+// Precision SVG icons matching the reference image
 function SourceIcon({ size = 20, className = '' }: { size?: number; className?: string }) {
   return (
     <svg
@@ -117,15 +117,16 @@ export interface PipelineStage {
   metric: string;
   statusText: string;
   IconComponent: React.ComponentType<{ size?: number; className?: string }>;
-  // Completed state styling
+  // Completed styling
   completedBg: string;
   completedGlow: string;
   completedBadgeBg: string;
-  // Active state styling
+  // Active styling
   activeAccent: string;
   activeBorder: string;
   activeText: string;
   activeGlow: string;
+  activeRippleBorder: string;
   barGradient: string;
 }
 
@@ -143,7 +144,8 @@ const STAGES: PipelineStage[] = [
     activeAccent: '#10b981',
     activeBorder: 'border-emerald-500',
     activeText: 'text-emerald-600',
-    activeGlow: 'rgba(16,185,129,0.5)',
+    activeGlow: 'rgba(16,185,129,0.45)',
+    activeRippleBorder: 'border-emerald-400',
     barGradient: 'from-emerald-500 to-teal-400',
   },
   {
@@ -159,7 +161,8 @@ const STAGES: PipelineStage[] = [
     activeAccent: '#0ea5e9',
     activeBorder: 'border-sky-500',
     activeText: 'text-sky-600',
-    activeGlow: 'rgba(14,165,233,0.5)',
+    activeGlow: 'rgba(14,165,233,0.45)',
+    activeRippleBorder: 'border-sky-400',
     barGradient: 'from-sky-500 to-blue-600',
   },
   {
@@ -175,7 +178,8 @@ const STAGES: PipelineStage[] = [
     activeAccent: '#a855f7',
     activeBorder: 'border-purple-500',
     activeText: 'text-purple-600',
-    activeGlow: 'rgba(168,85,247,0.5)',
+    activeGlow: 'rgba(168,85,247,0.45)',
+    activeRippleBorder: 'border-purple-400',
     barGradient: 'from-purple-500 via-indigo-500 to-sky-400',
   },
   {
@@ -191,7 +195,8 @@ const STAGES: PipelineStage[] = [
     activeAccent: '#14b8a6',
     activeBorder: 'border-teal-500',
     activeText: 'text-teal-600',
-    activeGlow: 'rgba(20,184,166,0.5)',
+    activeGlow: 'rgba(20,184,166,0.45)',
+    activeRippleBorder: 'border-teal-400',
     barGradient: 'from-teal-500 to-emerald-400',
   },
   {
@@ -207,18 +212,19 @@ const STAGES: PipelineStage[] = [
     activeAccent: '#f97316',
     activeBorder: 'border-orange-500',
     activeText: 'text-orange-600',
-    activeGlow: 'rgba(249,115,22,0.5)',
+    activeGlow: 'rgba(249,115,22,0.45)',
+    activeRippleBorder: 'border-orange-400',
     barGradient: 'from-orange-500 to-amber-400',
   },
 ];
 
-const STAGE_DURATION_MS = 2600; // Duration each stage stays active
-const CELEBRATION_DURATION_MS = 2000; // Duration when all 5 are completed before loop resets
+const STAGE_DURATION_MS = 2500; // Duration each stage stays active
+const CELEBRATION_DURATION_MS = 2000; // Duration when all 5 are completed before cycle resets
 
 export function PipelineArchitectureCard() {
   const reduced = useReducedMotion();
-  // Default to stage 2 (Processing) matching the user's reference screenshot
-  const [activeStage, setActiveStage] = useState<number>(2);
+  // Starts from Stage 0: Source!
+  const [activeStage, setActiveStage] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isCelebration, setIsCelebration] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
@@ -226,14 +232,14 @@ export function PipelineArchitectureCard() {
 
   const startTimeRef = useRef<number>(Date.now());
 
-  // Continuous execution cycle loop
+  // Continuous Left-to-Right Execution Loop
   useEffect(() => {
     if (reduced || !isPlaying) return;
 
     startTimeRef.current = Date.now();
     setProgress(0);
 
-    const intervalTime = 40;
+    const intervalTime = 30; // 33 fps smooth progress animation
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTimeRef.current;
       const targetDuration = isCelebration ? CELEBRATION_DURATION_MS : STAGE_DURATION_MS;
@@ -244,7 +250,7 @@ export function PipelineArchitectureCard() {
         clearInterval(interval);
         if (isCelebration) {
           setIsCelebration(false);
-          setActiveStage(0);
+          setActiveStage(0); // Smoothly restart cycle from Source!
         } else {
           setActiveStage((prev) => {
             if (prev >= STAGES.length - 1) {
@@ -272,10 +278,10 @@ export function PipelineArchitectureCard() {
 
   return (
     <div className="relative mx-auto w-full max-w-[34rem] lg:max-w-none">
-      {/* Outer Ambient Atmosphere Glowing Halos */}
+      {/* Outer Atmosphere Glows */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-6 sm:-inset-8 rounded-[3.2rem] bg-gradient-to-r from-emerald-400/20 via-sky-400/20 via-purple-500/25 to-pink-400/20 blur-3xl opacity-75"
+        className="pointer-events-none absolute -inset-6 sm:-inset-8 rounded-[3.2rem] bg-gradient-to-r from-emerald-400/20 via-sky-400/20 via-purple-500/25 to-pink-400/20 blur-3xl opacity-80"
       />
       <div
         aria-hidden="true"
@@ -323,11 +329,11 @@ export function PipelineArchitectureCard() {
             </span>
           </div>
 
-          {/* Top-Right Pill Badge (LINK EASY VIEW / LIVE STATUS) with Play/Pause toggle */}
+          {/* Top-Right Pill Badge with Play/Pause toggle */}
           <button
             type="button"
             onClick={() => setIsPlaying((p) => !p)}
-            className="group flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[9.5px] sm:text-[10px] font-mono font-semibold uppercase tracking-wider text-emerald-800 transition-colors hover:bg-emerald-500/20"
+            className="group flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[9.5px] sm:text-[10px] font-mono font-semibold uppercase tracking-wider text-emerald-800 transition-colors hover:bg-emerald-500/20 cursor-pointer"
             title={isPlaying ? 'Pause auto-cycle' : 'Resume auto-cycle'}
             aria-label={isPlaying ? 'Pause pipeline animation' : 'Resume pipeline animation'}
           >
@@ -348,22 +354,39 @@ export function PipelineArchitectureCard() {
 
         {/* Main Pipeline Track Area */}
         <div className="relative px-1 py-7 sm:py-9">
-          {/* Left Incoming Data Dotted Stream & Arrow */}
+          {/* Left Incoming Data Dotted Stream & Arrow entering Source */}
           <div
             aria-hidden="true"
-            className="absolute left-0 top-[2.95rem] sm:top-[3.4rem] -translate-x-1 flex items-center opacity-70 pointer-events-none"
+            className="absolute left-0 top-[2.95rem] sm:top-[3.4rem] -translate-x-1 flex items-center pointer-events-none"
           >
-            <div className="h-0.5 w-4 sm:w-6 border-t-2 border-dotted border-emerald-500" />
+            <div className="h-0.5 w-4 sm:w-6 border-t-2 border-dotted border-emerald-500/80" />
             <ArrowRight size={10} className="text-emerald-500 -ml-1" />
+            {/* Incoming pulsing particle */}
+            {activeStage === 0 && isPlaying && !reduced && (
+              <motion.span
+                className="absolute left-0 h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"
+                animate={{ left: ['0%', '100%'], opacity: [0, 1, 0] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: 'easeIn' }}
+              />
+            )}
           </div>
 
-          {/* Right Outgoing Data Dotted Stream & Arrow */}
+          {/* Right Outgoing Data Dotted Stream & Arrow exiting Analytics */}
           <div
             aria-hidden="true"
-            className="absolute right-0 top-[2.95rem] sm:top-[3.4rem] translate-x-1 flex items-center opacity-60 pointer-events-none"
+            className="absolute right-0 top-[2.95rem] sm:top-[3.4rem] translate-x-1 flex items-center pointer-events-none"
           >
-            <div className="h-0.5 w-4 sm:w-6 border-t-2 border-dotted border-slate-300" />
-            <ArrowRight size={10} className="text-slate-400 -ml-1" />
+            <div
+              className={`h-0.5 w-4 sm:w-6 border-t-2 border-dotted transition-colors duration-500 ${
+                isCelebration ? 'border-orange-500' : 'border-slate-300'
+              }`}
+            />
+            <ArrowRight
+              size={10}
+              className={`-ml-1 transition-colors duration-500 ${
+                isCelebration ? 'text-orange-500' : 'text-slate-400'
+              }`}
+            />
           </div>
 
           {/* 5 Stages Node Columns & Interconnecting Pulsing Lines */}
@@ -386,30 +409,31 @@ export function PipelineArchitectureCard() {
                       className="group relative flex flex-col items-center cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-purple-500 rounded-2xl"
                       aria-label={`${stage.label} stage - ${isCompleted ? 'Completed' : isActive ? 'Active' : 'Pending'}`}
                     >
-                      {/* Concentric Ripple Rings for Active Stage */}
+                      {/* Concentric Ripple Waves for Active Stage (Matching Squircle Shape) */}
                       {isActive && !reduced && (
                         <div
                           aria-hidden="true"
                           className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
                         >
-                          {/* Inner ripple ring */}
+                          {/* Inner Ripple Squircle */}
                           <motion.span
-                            className="absolute h-full w-full rounded-2xl border-2 border-purple-400"
-                            initial={{ scale: 1, opacity: 0.8 }}
-                            animate={{ scale: [1, 1.32, 1.55], opacity: [0.8, 0.35, 0] }}
+                            className={`absolute h-full w-full rounded-2xl border-2 ${stage.activeRippleBorder}`}
+                            initial={{ scale: 1, opacity: 0.85 }}
+                            animate={{ scale: [1, 1.28, 1.55], opacity: [0.85, 0.35, 0] }}
                             transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
                           />
-                          {/* Outer ripple ring */}
+                          {/* Outer Ripple Squircle */}
                           <motion.span
-                            className="absolute h-full w-full rounded-2xl border border-indigo-400"
+                            className={`absolute h-full w-full rounded-2xl border ${stage.activeRippleBorder}`}
                             initial={{ scale: 1, opacity: 0.6 }}
-                            animate={{ scale: [1, 1.2, 1.4], opacity: [0.6, 0.25, 0] }}
+                            animate={{ scale: [1, 1.18, 1.38], opacity: [0.6, 0.25, 0] }}
                             transition={{ duration: 1.8, repeat: Infinity, delay: 0.45, ease: 'easeOut' }}
                           />
-                          {/* Ambient radial blur ring */}
+                          {/* Ambient Pulsing Aura */}
                           <motion.span
-                            className="absolute h-full w-full rounded-2xl bg-purple-500/25 blur-md"
-                            animate={{ scale: [1, 1.18, 1], opacity: [0.4, 0.75, 0.4] }}
+                            className="absolute h-full w-full rounded-2xl blur-lg"
+                            style={{ backgroundColor: stage.activeGlow }}
+                            animate={{ scale: [1, 1.15, 1], opacity: [0.35, 0.65, 0.35] }}
                             transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
                           />
                         </div>
@@ -419,7 +443,18 @@ export function PipelineArchitectureCard() {
                       <motion.div
                         whileHover={{ scale: 1.06 }}
                         whileTap={{ scale: 0.96 }}
-                        transition={{ type: 'spring', damping: 20, stiffness: 350 }}
+                        animate={
+                          isActive && !reduced
+                            ? { scale: [1, 1.025, 1] }
+                            : isCompleted
+                            ? { scale: 1 }
+                            : { scale: 1 }
+                        }
+                        transition={{
+                          scale: isActive
+                            ? { duration: 1.8, repeat: Infinity, ease: 'easeInOut' }
+                            : { type: 'spring', damping: 20, stiffness: 350 },
+                        }}
                         className={`relative grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl transition-all duration-500 ${
                           isCompleted
                             ? `${stage.completedBg} ${stage.completedGlow} text-white`
@@ -432,14 +467,14 @@ export function PipelineArchitectureCard() {
                         <AnimatePresence>
                           {isCompleted && (
                             <motion.span
-                              initial={{ scale: 0, rotate: -25 }}
+                              initial={{ scale: 0, rotate: -30 }}
                               animate={{ scale: 1, rotate: 0 }}
                               exit={{ scale: 0 }}
                               transition={{ type: 'spring', damping: 14, stiffness: 340 }}
                               className={`absolute -top-1.5 -right-1.5 z-20 flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full border-2 border-white shadow-sm ${stage.completedBadgeBg}`}
                               aria-hidden="true"
                             >
-                              <Check size={10} strokeWidth={3.4} className="text-white" />
+                              <Check size={10} strokeWidth={3.5} className="text-white" />
                             </motion.span>
                           )}
                         </AnimatePresence>
@@ -457,7 +492,7 @@ export function PipelineArchitectureCard() {
                       <span
                         className={`mt-2.5 font-display text-[11px] sm:text-xs font-semibold tracking-tight transition-colors duration-300 ${
                           isCompleted
-                            ? 'text-ink'
+                            ? 'text-ink font-bold'
                             : isActive
                             ? `${stage.activeText} font-bold`
                             : 'text-slate-400 font-medium'
@@ -466,18 +501,23 @@ export function PipelineArchitectureCard() {
                         {stage.label}
                       </span>
 
-                      {/* Animated Mini Progress Bar directly beneath active label */}
-                      <div className="mt-1 h-1.5 w-12 sm:w-14 overflow-hidden rounded-full bg-slate-200/70">
+                      {/* Pill Indicator Bar beneath label matching reference image */}
+                      <div className="mt-1.5 h-1.5 w-12 sm:w-14 overflow-hidden rounded-full bg-slate-200/80">
                         {isActive ? (
                           <motion.div
                             className={`h-full rounded-full bg-gradient-to-r ${stage.barGradient} shadow-[0_0_8px_${stage.activeGlow}]`}
                             style={{ width: `${progress}%` }}
-                            transition={{ duration: 0.05, ease: 'linear' }}
+                            transition={{ duration: 0.04, ease: 'linear' }}
                           />
                         ) : isCompleted ? (
-                          <div className="h-full w-full rounded-full bg-emerald-500" />
+                          <motion.div
+                            initial={{ scaleX: 0 }}
+                            animate={{ scaleX: 1 }}
+                            transition={{ duration: 0.3 }}
+                            className="h-full w-full rounded-full bg-emerald-500 origin-left"
+                          />
                         ) : (
-                          <div className="h-full w-0" />
+                          <div className="h-full w-full rounded-full bg-slate-200/60" />
                         )}
                       </div>
                     </button>
@@ -489,33 +529,40 @@ export function PipelineArchitectureCard() {
                       className="relative flex-1 flex items-center justify-center px-1 sm:px-2 pt-6 sm:pt-7"
                       aria-hidden="true"
                     >
-                      {/* Dotted Line */}
+                      {/* Dotted Line Track */}
                       <div
                         className={`h-0.5 w-full border-t-2 border-dotted transition-colors duration-500 ${
-                          isCompleted
-                            ? 'border-emerald-400/90'
+                          index < activeStage || isCelebration
+                            ? 'border-emerald-500'
+                            : index === activeStage
+                            ? 'border-sky-400/80'
                             : 'border-slate-300/80'
                         }`}
                       />
 
-                      {/* Data Flow "Walking" Pulse traveling across the line */}
-                      {isActive && !reduced && (
-                        <motion.div
-                          className="pointer-events-none absolute top-[1.48rem] sm:top-[1.72rem] z-20"
-                          initial={{ left: '0%' }}
-                          animate={{ left: '100%' }}
-                          transition={{
-                            duration: 1.3,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                          }}
-                        >
-                          <span className="relative flex h-3 w-3 -translate-x-1/2 items-center justify-center">
-                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-70" />
-                            <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8]" />
-                          </span>
-                        </motion.div>
-                      )}
+                      {/* Data Flow "Walking" Pulse: Glowing Cyan Orb with ring halo traveling across */}
+                      {(index === activeStage || (index === activeStage - 1 && progress < 40)) &&
+                        isPlaying &&
+                        !reduced && (
+                          <motion.div
+                            className="pointer-events-none absolute top-[1.32rem] sm:top-[1.58rem] z-20"
+                            initial={{ left: '0%' }}
+                            animate={{ left: '100%' }}
+                            transition={{
+                              duration: 1.4,
+                              repeat: Infinity,
+                              ease: 'easeInOut',
+                            }}
+                          >
+                            <div className="relative flex h-5 w-5 -translate-x-1/2 items-center justify-center">
+                              {/* Outer ring glow */}
+                              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400/40" />
+                              <span className="h-3.5 w-3.5 rounded-full bg-sky-300/40 flex items-center justify-center border border-sky-400/60">
+                                <span className="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_12px_#38bdf8]" />
+                              </span>
+                            </div>
+                          </motion.div>
+                        )}
                     </div>
                   )}
                 </React.Fragment>
@@ -535,15 +582,24 @@ export function PipelineArchitectureCard() {
                 <Activity size={13} className={isPlaying && !reduced ? 'animate-pulse' : ''} />
               </span>
               <div className="min-w-0 truncate text-xs">
-                <span className="font-semibold text-ink">{currentStage.label}: </span>
-                <span className="text-ink-soft">{currentStage.statusText}</span>
+                {isCelebration ? (
+                  <>
+                    <span className="font-bold text-emerald-700">Pipeline Cycle Complete: </span>
+                    <span className="text-ink-soft">All 5 stages verified · Zero drift · SLA 100%</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold text-ink">{currentStage.label}: </span>
+                    <span className="text-ink-soft">{currentStage.statusText}</span>
+                  </>
+                )}
               </div>
             </div>
 
             <div className="flex items-center gap-2 font-mono text-[10px] text-muted shrink-0">
               <span className="inline-flex items-center gap-1 rounded-md bg-cream px-2 py-0.5 border border-line text-ink font-semibold">
                 <Sparkles size={11} className="text-accent-yellow" />
-                {currentStage.metric}
+                {isCelebration ? '100% SLA' : currentStage.metric}
               </span>
             </div>
           </div>
