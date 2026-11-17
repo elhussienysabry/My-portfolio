@@ -31,7 +31,7 @@ export function AboutSection() {
             <div aria-hidden="true" className="absolute -right-20 -top-20 h-52 w-52 rounded-full bg-accent-blue/[0.06]" />
             <div className="relative space-y-5 text-[15px] leading-relaxed text-ink-soft sm:text-base">
               <p className="text-lg leading-relaxed text-ink sm:text-xl">
-                I&rsquo;m a data engineer focused on building reliable pipelines and understanding the
+                I&rsquo;m Elhussieny Sabry, a data engineer focused on building reliable pipelines and understanding the
                 systems behind them — <span className="marker-yellow font-medium text-ink">from storage engines to schedulers.</span>
               </p>
               <p>

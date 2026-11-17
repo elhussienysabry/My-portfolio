@@ -342,7 +342,7 @@ export function HeroSection() {
                 Available for opportunities
               </span>
               <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
-                {siteConfig.name}
+                {siteConfig.name} · Data Engineer
               </span>
             </motion.div>
 
@@ -374,7 +374,7 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.18 }}
               className="mt-7 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg"
             >
-              I&rsquo;m a data engineer who cares about what happens beneath the query. I build pipelines
+              I&rsquo;m Elhussieny Sabry, a data engineer who cares about what happens beneath the query. I build pipelines
               with schema checks, idempotent loads and quality gates — and study the database internals
               that make them trustworthy.
             </motion.p>
