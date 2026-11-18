@@ -9,7 +9,7 @@ import {
   Code, Database, ArrowRightLeft, HardDrive, Cpu, Workflow, BookOpen,
   Radio, Cloud, ChevronDown, ChevronUp, Compass, CheckCircle2, Clock,
   Rocket, Sparkles, ArrowRight, Layers, GitBranch, Target, Zap,
-  ShieldCheck, Flag,
+  ShieldCheck, Flag, Check,
 } from 'lucide-react';
 
 /* ── Icon registry ── */
@@ -626,34 +626,110 @@ function ProgressSummary() {
 }
 
 /* ── Interactive architecture flow ── */
-const architectureNodes = [
+type ArchState = 'built' | 'next' | 'planned';
+
+const architectureNodes: {
+  label: string;
+  icon: React.ElementType;
+  color: string;
+  textColor: string;
+  state: ArchState;
+  role: string;
+  gradient?: [string, string, string];
+}[] = [
   {
-    label: 'Data Sources', icon: Database, color: '#2f55ff', textColor: '#2f55ff', state: 'built' as const,
+    label: 'Data Sources', icon: Database, color: '#2f55ff', textColor: '#2f55ff', state: 'built',
+    gradient: ['#6b86ff', '#2f55ff', '#1c39c9'],
     role: 'PostgreSQL, APIs and flat files — the entry points every pipeline starts from.',
   },
   {
-    label: 'Kafka', icon: Radio, color: '#00a6c4', textColor: '#007e95', state: 'next' as const,
+    label: 'Kafka', icon: Radio, color: '#00a6c4', textColor: '#007e95', state: 'next',
     role: 'The event backbone I am learning next: topics, partitions and consumer groups for real-time streams.',
   },
   {
-    label: 'Spark', icon: Cpu, color: '#ff7a2f', textColor: '#b84a00', state: 'built' as const,
+    label: 'Spark', icon: Cpu, color: '#ff7a2f', textColor: '#b84a00', state: 'built',
+    gradient: ['#ffb184', '#ff7a2f', '#c9540c'],
     role: 'Distributed batch and stream processing — built and tuned in the Spark-Docker Lab.',
   },
   {
-    label: 'Cloud Storage', icon: Cloud, color: '#9a7bff', textColor: '#5a3fe0', state: 'planned' as const,
+    label: 'Cloud Storage', icon: Cloud, color: '#9a7bff', textColor: '#5a3fe0', state: 'planned',
     role: 'Object storage and data-lake foundations — planned after Kafka.',
   },
   {
-    label: 'Analytics', icon: Layers, color: '#0a7d5c', textColor: '#0a7d5c', state: 'built' as const,
+    label: 'Analytics', icon: Layers, color: '#0a7d5c', textColor: '#0a7d5c', state: 'built',
+    gradient: ['#45c39a', '#0a7d5c', '#076048'],
     role: 'Curated models, dashboards and decisions — where pipeline value becomes visible.',
   },
 ];
 
-const stateLabel: Record<'built' | 'next' | 'planned', string> = {
-  built: 'built',
-  next: 'next',
-  planned: 'planned',
+const stateLabel: Record<ArchState, string> = { built: 'built', next: 'next', planned: 'planned' };
+
+const stateChip: Record<ArchState, string> = {
+  built: 'border border-emerald-600/20 bg-emerald-600/10 text-emerald-800',
+  next: 'border border-cyan-600/35 bg-cyan-500/15 text-cyan-800',
+  planned: 'border border-dashed border-line-strong/70 bg-cream/70 text-muted',
 };
+
+function NodeChip({ state, large = false }: { state: ArchState; large?: boolean }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full font-semibold uppercase tracking-wider ${
+        large ? 'px-2 py-0.5 text-[8px]' : 'px-1.5 py-0.5 text-[7px]'
+      } ${stateChip[state]}`}
+    >
+      {state === 'built' && <Check size={large ? 9 : 8} strokeWidth={3.5} aria-hidden="true" />}
+      {state === 'next' && <span className="h-1 w-1 animate-pulse rounded-full bg-cyan-500" aria-hidden="true" />}
+      {stateLabel[state]}
+    </span>
+  );
+}
+
+/* One dotted link per gap between nodes, carrying coloured data packets. */
+function FlowLink({ index, color, playing }: { index: number; color: string; playing: boolean }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute top-6 h-0 sm:top-7"
+      style={{ left: `${10 + index * 20}%`, width: '20%' }}
+    >
+      <div className="absolute inset-x-0 top-0 border-t-2 border-dotted border-line-strong/60" />
+
+      {playing &&
+        [0, 1].map((packet) => (
+          <motion.div
+            key={packet}
+            className="absolute inset-x-0 top-0"
+            initial={{ x: '0%', opacity: 0 }}
+            animate={{ x: '100%', opacity: [0, 1, 1, 0] }}
+            transition={{
+              x: {
+                duration: 3.2,
+                delay: packet * 1.6 + index * 0.4,
+                repeat: Infinity,
+                ease: 'linear',
+              },
+              opacity: {
+                duration: 3.2,
+                delay: packet * 1.6 + index * 0.4,
+                repeat: Infinity,
+                ease: 'linear',
+                times: [0, 0.12, 0.88, 1],
+              },
+            }}
+          >
+            <span
+              className="absolute left-0 top-0 h-[2px] w-6 -translate-x-full -translate-y-1/2 rounded-full"
+              style={{ backgroundImage: `linear-gradient(to right, transparent, ${color}99)` }}
+            />
+            <span
+              className="absolute left-0 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{ backgroundColor: color, boxShadow: `0 0 12px ${color}b3` }}
+            />
+          </motion.div>
+        ))}
+    </div>
+  );
+}
 
 function ArchitectureFlow() {
   const ref = useRef<HTMLDivElement>(null);
@@ -668,119 +744,164 @@ function ArchitectureFlow() {
         <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted">
           Where it all connects
         </p>
-        <p className="mb-1 text-sm leading-relaxed text-ink-soft">
+        <p className="text-sm leading-relaxed text-ink-soft">
           <span className="font-medium text-ink">Understanding how data moves</span> is just as important as understanding where it is stored.
         </p>
-        <p className="mb-6 text-[11px] text-muted">Tap or hover a node to see its role.</p>
 
-        <div className="relative">
-          <div aria-hidden="true" className="absolute left-[8%] right-[8%] top-5 h-px bg-gradient-to-r from-accent-blue via-accent-purple to-accent-green opacity-25 sm:top-6" />
+        {/* Flow stage */}
+        <div className="relative mt-5 overflow-hidden rounded-2xl border border-line/80 bg-paper/60">
+          <div aria-hidden="true" className="pointer-events-none absolute -left-12 top-0 h-44 w-44 rounded-full bg-accent-blue/10 blur-3xl" />
+          <div aria-hidden="true" className="pointer-events-none absolute -right-12 bottom-0 h-44 w-44 rounded-full bg-accent-green/10 blur-3xl" />
 
-          {!reduced && inView && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute left-[8%] right-[8%] top-5 z-0 sm:top-6"
-            >
-              {[
-                { color: 'bg-accent-blue', glow: 'shadow-[0_0_12px_rgba(47,85,255,0.9)]', trail: 'via-accent-blue/40 to-accent-blue/80', delay: 0 },
-                { color: 'bg-accent-purple', glow: 'shadow-[0_0_12px_rgba(115,87,255,0.9)]', trail: 'via-accent-purple/40 to-accent-purple/80', delay: 1.33 },
-                { color: 'bg-accent-green', glow: 'shadow-[0_0_12px_rgba(10,125,92,0.9)]', trail: 'via-accent-green/40 to-accent-green/80', delay: 2.66 },
-              ].map((dot) => (
-                <motion.div
-                  key={dot.delay}
-                  className="absolute inset-x-0 top-0"
-                  initial={{ x: '0%', opacity: 0 }}
-                  animate={{ x: '100%', opacity: [0, 1, 1, 0] }}
-                  transition={{
-                    x: { duration: 4, delay: dot.delay, repeat: Infinity, ease: 'linear' },
-                    opacity: {
-                      duration: 4,
-                      delay: dot.delay,
-                      repeat: Infinity,
-                      ease: 'linear',
-                      times: [0, 0.08, 0.92, 1],
-                    },
-                  }}
-                >
-                  {/* Comet trail keeps the direction of travel readable */}
-                  <span
-                    className={`absolute left-0 top-0 h-[2px] w-5 -translate-x-full -translate-y-1/2 rounded-full bg-gradient-to-r from-transparent ${dot.trail}`}
-                  />
-                  <span
-                    className={`absolute left-0 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full ${dot.color} ${dot.glow}`}
-                  />
-                </motion.div>
-              ))}
+          <div className="relative px-3 pb-3 pt-3.5 sm:px-5 sm:pb-4 sm:pt-4">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">
+                Flow map <span className="text-line-strong">·</span> 5 nodes
+              </p>
+              <p className="text-[10px] text-muted">Tap or hover a node to inspect its role</p>
             </div>
-          )}
 
-          <div className="grid grid-cols-5 gap-1 sm:gap-2">
-            {architectureNodes.map((item, index) => {
-              const active = activeNode === index;
-              return (
-                <motion.button
-                  key={item.label}
-                  type="button"
-                  initial={reduced ? false : { opacity: 0, y: 12 }}
-                  animate={inView ? { opacity: 1, y: 0 } : undefined}
-                  transition={{ delay: 0.1 + index * 0.1, duration: 0.5 }}
-                  onClick={() => setActiveNode(index)}
-                  onMouseEnter={() => setActiveNode(index)}
-                  onFocus={() => setActiveNode(index)}
-                  aria-pressed={active}
-                  className="group relative z-10 flex min-w-0 flex-col items-center gap-2 rounded-xl text-center"
-                >
-                  <span
-                    className={`grid h-10 w-10 place-items-center rounded-xl border shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 sm:h-12 sm:w-12 ${
-                      item.state !== 'built' ? 'border-dashed' : ''
-                    }`}
-                    style={{
-                      borderColor: active ? item.color : `${item.color}50`,
-                      color: item.color,
-                      backgroundColor: `${item.color}0d`,
-                      opacity: item.state === 'planned' ? 0.85 : 1,
-                      boxShadow: active ? `0 0 0 4px ${item.color}16, 0 8px 18px -10px ${item.color}80` : undefined,
-                    }}
-                  >
-                    <item.icon size={18} />
-                  </span>
-                  <span className={`text-[9px] font-mono font-medium leading-tight sm:text-[10px] ${
-                    active ? 'text-ink' : item.state === 'built' ? 'text-ink-soft' : 'text-muted'
-                  }`}>
-                    {item.label}
-                  </span>
-                  <span
-                    className="rounded-full px-1.5 py-0.5 text-[7px] font-semibold uppercase tracking-wider"
-                    style={{ backgroundColor: `${item.color}12`, color: item.textColor }}
-                  >
-                    {stateLabel[item.state]}
-                  </span>
-                </motion.button>
-              );
-            })}
-          </div>
+            <div className="relative pb-1 pt-2">
+              {architectureNodes.slice(0, -1).map((item, index) => (
+                <FlowLink
+                  key={`link-${item.label}`}
+                  index={index}
+                  color={architectureNodes[index + 1].color}
+                  playing={!reduced && inView}
+                />
+              ))}
 
-          <div
-            aria-live="polite"
-            className="mt-4 flex items-start gap-3 rounded-xl border border-line bg-paper/70 px-3.5 py-3"
-          >
-            <span
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg"
-              style={{ backgroundColor: `${node.color}12`, color: node.color }}
-            >
-              <node.icon size={15} />
-            </span>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="text-xs font-bold text-ink">{node.label}</p>
-                <span
-                  className="rounded-full px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider"
-                  style={{ backgroundColor: `${node.color}12`, color: node.textColor }}
-                >
-                  {stateLabel[node.state]}
-                </span>
+              <div className="grid grid-cols-5 gap-1 sm:gap-2">
+                {architectureNodes.map((item, index) => {
+                  const active = activeNode === index;
+                  const isBuilt = item.state === 'built';
+
+                  return (
+                    <motion.button
+                      key={item.label}
+                      type="button"
+                      initial={reduced ? false : { opacity: 0, y: 12 }}
+                      animate={inView ? { opacity: 1, y: 0 } : undefined}
+                      transition={{ delay: 0.1 + index * 0.1, duration: 0.5 }}
+                      onClick={() => setActiveNode(index)}
+                      onMouseEnter={() => setActiveNode(index)}
+                      onFocus={() => setActiveNode(index)}
+                      aria-pressed={active}
+                      aria-label={`${item.label} — ${stateLabel[item.state]}`}
+                      className="group relative z-10 flex min-w-0 flex-col items-center gap-2 rounded-2xl text-center outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 focus-visible:ring-offset-2"
+                    >
+                      <div className="relative">
+                        {/* Selected node: concentric rings */}
+                        {active && !reduced && (
+                          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+                            <motion.span
+                              className="absolute inset-0 rounded-2xl border-2"
+                              style={{ borderColor: `${item.color}aa` }}
+                              animate={{ scale: [1, 1.22, 1.52], opacity: [0.7, 0.35, 0] }}
+                              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeOut' }}
+                            />
+                            <motion.span
+                              className="absolute inset-0 rounded-2xl border"
+                              style={{ borderColor: `${item.color}77` }}
+                              animate={{ scale: [1, 1.22, 1.52], opacity: [0.55, 0.25, 0] }}
+                              transition={{ duration: 2.4, delay: 1.2, repeat: Infinity, ease: 'easeOut' }}
+                            />
+                          </div>
+                        )}
+
+                        {/* The node being learned next keeps a slow pulse */}
+                        {!active && item.state === 'next' && !reduced && (
+                          <motion.span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute inset-0 rounded-2xl border"
+                            style={{ borderColor: `${item.color}66` }}
+                            animate={{ scale: [1, 1.2, 1.42], opacity: [0.7, 0.3, 0] }}
+                            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeOut' }}
+                          />
+                        )}
+
+                        <motion.span
+                          whileHover={reduced ? undefined : { scale: 1.05 }}
+                          whileTap={reduced ? undefined : { scale: 0.96 }}
+                          transition={{ type: 'spring', damping: 20, stiffness: 350 }}
+                          className={`relative z-10 grid h-12 w-12 place-items-center rounded-2xl border transition-colors duration-300 sm:h-14 sm:w-14 ${
+                            isBuilt
+                              ? 'text-white'
+                              : item.state === 'next'
+                                ? 'border-cyan-400/80 bg-white text-cyan-700'
+                                : 'border-dashed border-slate-300 bg-slate-100 text-slate-500'
+                          }`}
+                          style={
+                            isBuilt && item.gradient
+                              ? {
+                                  backgroundImage: `linear-gradient(135deg, ${item.gradient[0]} 0%, ${item.gradient[1]} 55%, ${item.gradient[2]} 100%)`,
+                                  borderColor: 'rgba(255,255,255,0.35)',
+                                  boxShadow: active
+                                    ? `0 0 0 3px ${item.color}1f, 0 14px 26px -14px ${item.gradient[2]}cc`
+                                    : `0 10px 22px -14px ${item.gradient[2]}cc`,
+                                }
+                              : active
+                                ? { boxShadow: `0 0 0 3px ${item.color}14, 0 10px 22px -16px ${item.color}aa` }
+                                : undefined
+                          }
+                        >
+                          <item.icon size={20} className="transition-transform duration-300 group-hover:-translate-y-px" />
+
+                          {isBuilt && (
+                            <span
+                              aria-hidden="true"
+                              className="absolute -right-1.5 -top-1.5 z-20 grid h-4 w-4 place-items-center rounded-full border-2 border-cream shadow-sm sm:h-[18px] sm:w-[18px]"
+                              style={{ backgroundColor: item.gradient?.[2] ?? item.textColor }}
+                            >
+                              <Check size={9} strokeWidth={3.5} className="text-white" />
+                            </span>
+                          )}
+                        </motion.span>
+                      </div>
+
+                      <span
+                        className={`flex min-h-[2.3em] items-start justify-center font-mono text-[9px] leading-tight sm:min-h-0 sm:text-[10px] ${
+                          active
+                            ? 'font-bold text-ink'
+                            : isBuilt
+                              ? 'font-medium text-ink-soft'
+                              : item.state === 'next'
+                                ? 'font-semibold'
+                                : 'font-medium text-muted'
+                        }`}
+                        style={item.state === 'next' && !active ? { color: item.textColor } : undefined}
+                      >
+                        {item.label}
+                      </span>
+
+                      <NodeChip state={item.state} />
+                    </motion.button>
+                  );
+                })}
               </div>
-              <p className="mt-1 text-[11.5px] leading-relaxed text-muted">{node.role}</p>
+            </div>
+
+            {/* Selected node readout */}
+            <div
+              aria-live="polite"
+              className="mt-4 flex items-center gap-3 rounded-xl border border-line bg-cream/90 px-3 py-2.5"
+            >
+              <span
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-lg"
+                style={{ backgroundColor: `${node.color}14`, color: node.color }}
+              >
+                <node.icon size={15} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-xs font-bold text-ink">{node.label}</p>
+                  <NodeChip state={node.state} large />
+                </div>
+                <p className="mt-0.5 text-[11.5px] leading-relaxed text-muted">{node.role}</p>
+              </div>
+              <span className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-muted sm:inline">
+                {String(activeNode + 1).padStart(2, '0')} / 05
+              </span>
             </div>
           </div>
         </div>
