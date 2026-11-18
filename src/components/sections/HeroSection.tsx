@@ -50,7 +50,7 @@ function PipelinePreview() {
         initial={reduced ? false : { opacity: 0, scale: 0.85, rotate: 4 }}
         animate={{ opacity: 1, scale: 1, rotate: 3 }}
         transition={{ delay: 1.05, type: 'spring', stiffness: 170, damping: 16 }}
-        className="absolute -bottom-6 -right-2 hidden items-center gap-2 rounded-xl border border-line bg-cream px-3 py-2.5 shadow-lift sm:flex lg:-right-6 z-20"
+        className="absolute -bottom-9 -right-2 hidden items-center gap-2 rounded-xl border border-line bg-cream px-3 py-2.5 shadow-lift sm:flex lg:-right-6 z-20"
       >
         <span className="grid h-8 w-8 place-items-center rounded-lg bg-accent-purple/10 text-accent-purple">
           <GitPullRequest size={16} />

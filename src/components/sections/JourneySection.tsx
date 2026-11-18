@@ -677,12 +677,41 @@ function ArchitectureFlow() {
           <div aria-hidden="true" className="absolute left-[8%] right-[8%] top-5 h-px bg-gradient-to-r from-accent-blue via-accent-purple to-accent-green opacity-25 sm:top-6" />
 
           {!reduced && inView && (
-            <motion.div
+            <div
               aria-hidden="true"
-              className="absolute top-[1.05rem] z-10 h-2 w-2 rounded-full bg-accent-blue shadow-[0_0_10px_rgba(47,85,255,0.7)] sm:top-[1.35rem]"
-              animate={{ left: ['6%', '92%'] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'linear', repeatDelay: 1 }}
-            />
+              className="pointer-events-none absolute left-[8%] right-[8%] top-5 z-0 sm:top-6"
+            >
+              {[
+                { color: 'bg-accent-blue', glow: 'shadow-[0_0_12px_rgba(47,85,255,0.9)]', trail: 'via-accent-blue/40 to-accent-blue/80', delay: 0 },
+                { color: 'bg-accent-purple', glow: 'shadow-[0_0_12px_rgba(115,87,255,0.9)]', trail: 'via-accent-purple/40 to-accent-purple/80', delay: 1.33 },
+                { color: 'bg-accent-green', glow: 'shadow-[0_0_12px_rgba(10,125,92,0.9)]', trail: 'via-accent-green/40 to-accent-green/80', delay: 2.66 },
+              ].map((dot) => (
+                <motion.div
+                  key={dot.delay}
+                  className="absolute inset-x-0 top-0"
+                  initial={{ x: '0%', opacity: 0 }}
+                  animate={{ x: '100%', opacity: [0, 1, 1, 0] }}
+                  transition={{
+                    x: { duration: 4, delay: dot.delay, repeat: Infinity, ease: 'linear' },
+                    opacity: {
+                      duration: 4,
+                      delay: dot.delay,
+                      repeat: Infinity,
+                      ease: 'linear',
+                      times: [0, 0.08, 0.92, 1],
+                    },
+                  }}
+                >
+                  {/* Comet trail keeps the direction of travel readable */}
+                  <span
+                    className={`absolute left-0 top-0 h-[2px] w-5 -translate-x-full -translate-y-1/2 rounded-full bg-gradient-to-r from-transparent ${dot.trail}`}
+                  />
+                  <span
+                    className={`absolute left-0 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full ${dot.color} ${dot.glow}`}
+                  />
+                </motion.div>
+              ))}
+            </div>
           )}
 
           <div className="grid grid-cols-5 gap-1 sm:gap-2">
@@ -699,7 +728,7 @@ function ArchitectureFlow() {
                   onMouseEnter={() => setActiveNode(index)}
                   onFocus={() => setActiveNode(index)}
                   aria-pressed={active}
-                  className="group flex min-w-0 flex-col items-center gap-2 rounded-xl text-center"
+                  className="group relative z-10 flex min-w-0 flex-col items-center gap-2 rounded-xl text-center"
                 >
                   <span
                     className={`grid h-10 w-10 place-items-center rounded-xl border shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 sm:h-12 sm:w-12 ${

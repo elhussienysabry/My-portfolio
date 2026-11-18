@@ -191,6 +191,14 @@
     backface-visibility: hidden;
   }
 
+  .pipeline-progress {
+    transform-origin: left center;
+    animation-name: pipeline-progress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    will-change: transform;
+  }
+
   .stack-marquee:hover,
   .stack-marquee:focus-within {
     animation-play-state: paused;
@@ -315,6 +323,15 @@
   }
 }
 
+@keyframes pipeline-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @keyframes shine {
   0%,
   100% {
@@ -380,5 +397,10 @@
   .animate-shine,
   .stack-marquee {
     animation: none !important;
+  }
+
+  .pipeline-progress {
+    animation: none !important;
+    transform: scaleX(0.45);
   }
 }
